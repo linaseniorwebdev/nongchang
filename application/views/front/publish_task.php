@@ -267,7 +267,7 @@
                     } else {
                         // Alipay
                         // console.log(result.task_id);
-                        $('input[name="title"]').val("Payment Confirmation");
+                        $('input[name="title"]').val("支付确认：发饰任务");
                         $('input[name="amount"]').val(price);
                         $('input[name="orderid"]').val(result.task_id);
                         $('#agent_alipay').submit();

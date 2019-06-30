@@ -19,13 +19,13 @@
                 </div>
                 <div style="width: 100%;padding: 0 4%;">
                     <div class="row m-0 p-0 text15_regular">
-                        <span class="black444" style="width: 25%;">产品详情图：</span>
+                        <span class="black444">产品详情图：</span>
                     </div>
                     <div class="row mt-1 ml-0 mr-0">  
                         <!-- <img class="detail_img" id="small_product_img" src="public/img/empty.png" style="display: none;">  -->
-                        <div class="new_detail_img" id="new_detail_img" style="margin-left: 5px;">
-                            <input type="file" accept="image/*" id="select_detail_img" onchange="select_detail_img(this)" style="width: 60px;height: 50px;position: absolute;opacity: 0;">
-                            <img id="product_detail_img" src="public/img/empty.png" style="width: 60px;height: 50px;background-size: 100% 100%;">
+                        <div class="new_detail_img" id="new_detail_img" style="margin-left: 5px;margin-top: 5px;">
+                            <input type="file" accept="image/*" id="select_detail_img" onchange="select_detail_img(this)" style="width: 106px;height: 85px;position: absolute;opacity: 0;">
+                            <img id="product_detail_img" src="public/img/empty.png" style="width: 106px;height: 85px;background-size: 100% 100%;">
                         </div>
                     </div>
                 </div>

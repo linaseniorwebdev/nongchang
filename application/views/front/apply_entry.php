@@ -11,6 +11,7 @@
                 </div>
             </div>
         </div>
+
         <div class="content-body" style="margin-bottom: 60px;margin-top: 45px;">
             <form id="apply_entry_form" action="<?php echo base_url('front/apply_entry')?>" method="post">
                 <div style="width: 100%;padding: 0 4%;border-top: 3px solid #F7F7F7;border-bottom: 2px solid #F7F7F7;">

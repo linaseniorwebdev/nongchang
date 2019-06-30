@@ -809,7 +809,7 @@ class Api extends Base {
 
 			$users = array(); $rows = $this->User_model->get_all_users();
 			foreach ($rows as $row) {
-				$users[$row['id']] = array('name' => $row['username'], 'photo' => $row['photo']);
+				$users[$row['id']] = array('name' => $row['username'], 'photo' => ($row['photo'])?:'uploads/avatars/default.png');
 			}
 
 			$types = array(); $rows = $this->Product_type_model->get_all_product_types();

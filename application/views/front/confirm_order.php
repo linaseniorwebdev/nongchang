@@ -14,18 +14,26 @@
         <div class="content-body" style="margin-bottom: 60px;margin-top: 45px;background: white;">
             <input id="destination_id" type="hidden" value="<?php echo $destination['id']; ?>">
             <div onclick="go_select_address('<?php echo $url; ?>','<?php echo $pids; ?>')" class="row m-0 p-0" style="border-top: 4px solid #F7F7F7;border-bottom: 4px solid #F7F7F7;">
-                <div class="p-0 black_text14" style="font-size: 15px;margin: 5%;width: 100%;">
-                    <img src="public/img/target.png" style="width: 6%;height: 100%;vertical-align: middle;">&nbsp;&nbsp;
-                    <?php if ($destination['id']) { ?>
-                        <span>送至：<?php echo $destination['province'];echo $destination['city'];echo $destination['district'];echo $destination['detail'];?></span>
-                    <?php } else{?>
-                        <span>选择送货地址。</span>
-                    <?php }?>
-                    <span class="mdi mdi-chevron-right" style="float: right;font-size: 35px;color: #AAAAAA;"></span>
+                <div class="p-0 black_text14" style="font-size: 15px;margin: 3% 5%;width: 100%;">
+                   
+                    <div style="width: 6%;float: left;">
+                        <img src="public/img/target.png" style="width: 20px;height: 25px;vertical-align: middle;">
+                    </div>
+                    <div style="width: 80%;float: left;margin-left: 2%;line-height: 25px;">
+                        <?php if ($destination['id']) { ?>
+                            <span>送至：<?php echo $destination['province'];echo $destination['city'];echo $destination['district'];echo $destination['detail'];?></span>
+                        <?php } else{?>
+                            <span>选择送货地址。</span>
+                        <?php }?>
+                    </div>
+                    <div style="width: 6%;float: left;line-height: 25px;margin-left: 6%;">
+                        <span class="mdi mdi-chevron-right" style="float: right;font-size: 35px;color: #AAAAAA;"></span>
+                    </div>
+                    
                 </div>
             </div>
             <input type="hidden" id="pt_cnt" value="<?php echo count($products); ?>">
-            <?php foreach ($products as $key => $product){?>
+            <?php $product_names = ''; foreach ($products as $key => $product) { if (strlen($product_names) < 1) $product_names = $product['name']; else $product_names .= ('，' . $product['name']);?>
                 <div class="row" style="border-bottom: 4px solid #F5F5F5;padding-top: 5%;margin: 0 1%;">
                     <input id="product_id<?php echo $key; ?>" type="hidden" value="<?php echo $product['id']; ?>">
                     <div class="col-sm-5" style="text-align: center;width: 41.66667%;">
@@ -219,7 +227,7 @@
         } else {
             var pt_cnt = $('#pt_cnt').val();
             var product = [];
-            for (var i=0; i<pt_cnt; i++) {
+            for (var i = 0; i < pt_cnt; i++) {
                 var product_id = $('#product_id'+i).val();
                 var amount = parseInt($('#product_cnt'+i).text());
                 product[i] = {
@@ -249,7 +257,7 @@
                             // Weixin
                         } else {
                             // Alipay
-                            $('input[name="title"]').val("Payment Confirmation");
+                            $('input[name="title"]').val("支付确认：订单号-" + data.orderno + "，优品名-<?php echo $product_names; ?>");
                             $('input[name="amount"]').val(price);
                             $('input[name="orderid"]').val(result.orderid);
                             $('#agent_alipay').submit();

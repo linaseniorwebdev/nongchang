@@ -226,6 +226,7 @@
                         product_num = parseInt(product_num) + 1;
                         $('#product_num').text(product_num);
                         hide_pay_modal();
+                        location.reload();
                     } else {
                         swal("提示", "请再试一次。", "warning");
                     }

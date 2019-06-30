@@ -132,7 +132,7 @@
                     // Weixin
                 } else {
                     // Alipay
-                    $('input[name="title"]').val("Payment Confirmation");
+                    $('input[name="title"]').val("支付确认：土地认购（编号-<?php echo $land['landnum'] ?>）");
                     $('input[name="amount"]').val(land_price);
                     $('input[name="orderid"]').val(result.orderid);
                     $('#agent_alipay').submit();

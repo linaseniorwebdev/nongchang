@@ -7,8 +7,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once APPPATH . 'controllers/Base.php';
 
 class Admin extends Base {
-
-	// 仪表板页
+	
+	/**
+	 * 控制台
+	 */
 	public function index() {
 		if ($this->admin) {
 			$data = array();
@@ -27,8 +29,10 @@ class Admin extends Base {
 		} else
 			redirect('admin/signin');
 	}
-
-	// 登录页
+	
+	/**
+	 * 登录页
+	 */
 	public function signin() {
 		if ($this->admin)
 			redirect('admin/index');
@@ -56,14 +60,18 @@ class Admin extends Base {
 
 		$this->load->view('admin/signin', $messages);
 	}
-
-	// 登出页
+	
+	/**
+	 * 登出页
+	 */
 	public function signout() {
 		$this->session->unset_userdata('admin');
 		redirect('admin');
 	}
-
-	// 用户管理
+	
+	/**
+	 * 用户管理
+	 */
 	public function users() {
 		if ($this->admin) {
 			$this->load_header('用户管理', true);
@@ -74,8 +82,11 @@ class Admin extends Base {
 		} else
 			redirect('admin/signin');
 	}
-
-	// 地址管理
+	
+	/**
+	 * 地址管理
+	 * @param string $com
+	 */
 	public function address($com = 'province') {
 		if ($this->admin) {
 			$this->load->model('Province_model');
@@ -93,8 +104,11 @@ class Admin extends Base {
 		} else
 			redirect('admin/signin');
 	}
-
-	// 土地管理
+	
+	/**
+	 * 土地管理
+	 * @param string $com
+	 */
 	public function land($com = 'area') {
 		if ($this->admin) {
 			$this->load->model('Province_model');
@@ -123,8 +137,11 @@ class Admin extends Base {
 			redirect('admin/signin');
 		}
 	}
-
-	// 远程视频监控
+	
+	/**
+	 * 远程视频监控
+	 * @param string $com
+	 */
 	public function remote($com = 'channels') {
 		if ($this->admin) {
 			$data = array();
@@ -142,8 +159,11 @@ class Admin extends Base {
 			redirect('admin/signin');
 		}
 	}
-
-	// 任务管理
+	
+	/**
+	 * 任务管理
+	 * @param string $com
+	 */
 	public function task($com = 'category') {
 		if ($this->admin) {
 			$data = array();
@@ -165,8 +185,11 @@ class Admin extends Base {
 		} else
 			redirect('admin/signin');
 	}
-
-	// 优品管理
+	
+	/**
+	 * 优品管理
+	 * @param string $com
+	 */
 	public function product($com = 'unit') {
 		if ($this->admin) {
 			if ($com == 'unit')
@@ -184,8 +207,11 @@ class Admin extends Base {
 		} else
 			redirect('admin/signin');
 	}
-
-	// 订单管理
+	
+	/**
+	 * 订单管理
+	 * @param string $com
+	 */
 	public function order($com = 'product') {
 		if ($this->admin) {
 			if ($com == 'product')
@@ -199,8 +225,10 @@ class Admin extends Base {
 		} else
 			redirect('admin/signin');
 	}
-
-	// 赠送管理
+	
+	/**
+	 * 赠送管理
+	 */
 	public function delivery() {
 		if ($this->admin) {
 			$this->load_header('赠送管理', true);
@@ -211,8 +239,11 @@ class Admin extends Base {
 		} else
 			redirect('admin/signin');
 	}
-
-	// 订单管理
+	
+	/**
+	 * 订单管理
+	 * @param string $com
+	 */
 	public function wallet($com = 'income') {
 		if ($this->admin) {
 			if ($com === 'income') {
@@ -229,8 +260,11 @@ class Admin extends Base {
 			redirect('admin/signin');
 		}
 	}
-
-	// 系统管理
+	
+	/**
+	 * 系统管理
+	 * @param string $com
+	 */
 	public function system($com = 'coupon') {
 		if ($this->admin) {
 			if ($this->post_exist()) {

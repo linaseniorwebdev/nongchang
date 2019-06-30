@@ -60,13 +60,14 @@ $(document).ready(function() {
 			},
 			{
 				targets: [7],
-				width: '40px',
+				width: '130px',
 				render: function (data, type, row) {
 					var buffer = '<input type="hidden" value="' + row[0] + '" />';
 					if (row[6] == 1)
 						buffer += '<button type="button" class="btn btn-danger round box-shadow-1" onclick="disable(this)">禁用</button>';
 					else
 						buffer += '<button type="button" class="btn btn-success round box-shadow-1" onclick="enable(this)">启用</button>';
+					buffer += '<button type="button" class="btn btn-secondary round box-shadow-1" onclick="remove(this)" style="margin-left: 10px;">删除</button>';
 					return buffer;
 				},
 				orderable: false
@@ -139,7 +140,7 @@ function enable(obj) {
 function disable(obj) {
 	swal({
 		title: "确定吗？",
-		text: "此用户将被禁用，无法使用。",
+		text: "此优品将被禁用，无法使用。",
 		icon: "warning",
 		buttons: {
 			cancel: {
@@ -164,6 +165,44 @@ function disable(obj) {
 				{
 					id: obj.previousElementSibling.value,
 					status: 0
+				},
+				function (data) {
+					table.ajax.reload( null, false );
+					swal("更改成功!", "", "success");
+				},
+			);
+		}
+	});
+}
+
+function remove(obj) {
+	swal({
+		title: "确定吗？",
+		text: "此优品将被删除。",
+		icon: "warning",
+		buttons: {
+			cancel: {
+				text: "取消",
+				value: null,
+				visible: true,
+				className: "",
+				closeModal: true,
+			},
+			confirm: {
+				text: "确定",
+				value: true,
+				visible: true,
+				className: "",
+				closeModal: false
+			}
+		}
+	}).then(isConfirm => {
+		if (isConfirm) {
+			$.post(
+				'../../api/product/update',
+				{
+					id: obj.previousElementSibling.previousElementSibling.value,
+					status: 2
 				},
 				function (data) {
 					table.ajax.reload( null, false );

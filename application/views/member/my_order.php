@@ -317,13 +317,7 @@
                                 html += '<div class="product_detail">';
                                 html += '<p class="text13_regular black444">' + product[j]['name'] + '<span class="text12_medium" style="float: right;">¥' + product[j]['price'] + '</span></p>';
                                 html += '<p class="text13_regular black444">订单编号：<span class="text12_regular black999" style="float: right;">' + order['orderno'] + '</span></p>';
-                                if(order['status'] > 0){
-                                    html += '<p class="text13_regular black444">物流单号：<span class="text12_regular black999" style="float: right;">' + order['order_trade_no'] + '</span></p>';
-                                    html += '<p onclick="show_description('+i+','+j+')" class="text12_regular redFA5359" style="float: right;position: absolute; right: 10px;margin-top: 7px;">查看产品使用说明</p>';
-                                }
-                                else {
-                                    html += '<p onclick="show_description('+i+','+j+')" class="text12_regular redFA5359" style="float: right;position: absolute; right: 10px;margin-top: 33px;">查看产品使用说明</p>';
-                                }
+                                html += '<p onclick="show_description('+i+','+j+')" class="text12_regular redFA5359" style="float: right;position: absolute; right: 10px;margin-top: 33px;">查看产品使用说明</p>';
                                 html += '</div>';
                                 html += '</div>';
                                 html += '<div id="description'+i+'_'+j+'" class="row m-0" style="padding: 5px 10px;display: none;">';

@@ -27,10 +27,12 @@ $(document).ready(function() {
 				render: function ( data, type, row ) {
 					return '<img src="../../' + data + '" style="width: 80px;" />';
 				},
+				className: 'text-center',
 				orderable: false
 			},
 			{
 				targets: [2],
+				className: 'text-center',
 				orderable: false
 			},
 			{
@@ -40,10 +42,12 @@ $(document).ready(function() {
 			},
 			{
 				targets: [4],
+				className: 'text-center',
 				orderable: false
 			},
 			{
 				targets: [5],
+				className: 'text-center',
 				orderable: false
 			},
 			{
@@ -73,6 +77,7 @@ $(document).ready(function() {
 					buffer += ('<input type="hidden" value="' + row[0] + '" />');
 					return buffer;
 				},
+				className: 'text-center',
 				orderable: false
 			}
 		],

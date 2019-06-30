@@ -21,17 +21,21 @@ class Product_model extends CI_Model {
 		if($postData['length'] != -1){
 			$this->db->limit($postData['length'], $postData['start']);
 		}
+		$this->db->where('status !=', 2);
 		$query = $this->db->get();
 		return $query->result();
 	}
 
 	function countAll() {
 		$this->db->from($this->table);
-		return $this->db->count_all_results();
+		$this->db->where('status !=', 2);
+		$query = $this->db->get();
+		return $query->num_rows();
 	}
 
 	function countFiltered($postData) {
 		$this->_get_datatables_query($postData);
+		$this->db->where('status !=', 2);
 		$query = $this->db->get();
 		return $query->num_rows();
 	}
