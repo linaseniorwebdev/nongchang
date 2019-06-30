@@ -28,6 +28,14 @@ class Stock_model extends CI_Model {
 	}
 
 	/**
+	 * Get all user's stocks
+	 */
+	function get_user_stocks($user_id) {
+		$this->db->order_by('id', 'desc');
+		return $this->db->get_where('stocks', array('user' => $user_id))->result_array();
+	}
+
+	/**
 	 * function to add new stock
 	 */
 	function add_stock($params) {

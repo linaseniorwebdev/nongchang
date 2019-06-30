@@ -88,18 +88,17 @@ $(document).ready(function() {
 				targets: [11],
 				render: function ( data, type, row ) {
 					let buffer = '';
-					buffer += '<button type="button" class="btn btn-warning round box-shadow-1" onclick="order_detail('+row[0]+')">详情</button>';
+					buffer += '<button type="button" class="btn btn-warning round box-shadow-1" onclick="order_detail(' + row[0] + ')">详情</button>';
 					if (row[7] > 2 && row[7] < 6)
 						return buffer;
 					if (row[7] == 0)
 						return buffer;
-					buffer += '<button type="button" class="btn btn-info round box-shadow-1" onclick="update(this)">更新</button>';
+					buffer += '<button type="button" class="btn btn-info round box-shadow-1" onclick="update(this)" style="margin-left: 10px;">更新</button>';
 					buffer += ('<input type="hidden" value="' + row[0] + '" />');
 					buffer += ('<input type="hidden" value="' + row[7] + '" />');
 					buffer += ('<input type="hidden" value="' + row[10] + '" />');
 					if (row[7] == 1) {
-						console.log(row[0]);
-						buffer += '<button type="button" class="btn btn-success round box-shadow-1" onclick="logistic_order('+row[0]+')">物流</button>';
+						buffer += '<button type="button" class="btn btn-success round box-shadow-1" onclick="logistic_order(' + row[0] + ')" style="margin-left: 10px;">物流</button>';
 					}
 					return buffer;
 				},
@@ -139,13 +138,14 @@ $(document).ready(function() {
 function get_order_by_status(){
 	var status = $(this).data("status");
 
-	table.columns( '.order_status_column' ).every( function () {
+	table.columns('.order_status_column').every(function() {
 	    var that = this;
-	    that.search(status ).draw();
+	    that.search(status).draw();
 	});
 }
-function order_detail(order_id){
 
+function order_detail(order_id) {
+	location.href = '../order/detail/' + order_id;
 }
 
 function update(obj) {
@@ -310,12 +310,12 @@ function update(obj) {
 	}
 	$("#updateModal").modal({backdrop: 'static', keyboard: false});
 }
+
 function logistic_order(row){
-	
 	$("#logisticModal").modal({backdrop: 'static', keyboard: false});
 	console.log(row[1]);
-	
 }
+
 function confirmUpdate() {
 	$.post(
 		'../../api/order/product/update',
@@ -332,6 +332,7 @@ function confirmUpdate() {
 		}
 	);
 }
+
 function confirmLogistic() {
 	// $.post(
 	// 	'../../api/order/product/create_trade_no',
@@ -357,6 +358,7 @@ function confirmLogistic() {
 		// }
 	// );
 }
+
 $("#option1").click(function() {
 	curOption = curState + 1;
 	if ($(this).hasClass("selected"))

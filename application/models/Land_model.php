@@ -70,10 +70,15 @@ class Land_model extends CI_Model {
 	 * @param $id
 	 * @return array
 	 */
-	public function get_land($id) {
-		return $this->db->get_where('lands', array('id' => $id))->row_array();
+	public function get_land($land_id) {
+		return $this->db->get_where('lands', array('id' => $land_id))->row_array();
 	}
 
+	public function get_index_land() {
+		$this->db->from('lands');
+		$this->db->where('`intro` IS NOT NULL')->where('`owner` IS NULL')->limit(2);
+		return $this->db->get()->result_array();
+	}
 	/**
 	 * Get land by block id
 	 * @param $block_id

@@ -212,15 +212,41 @@ class Admin extends Base {
 	 * 订单管理
 	 * @param string $com
 	 */
-	public function order($com = 'product') {
+	public function order($com = 'product', $sub = null) {
 		if ($this->admin) {
+			$data = array();
 			if ($com == 'product')
 				$this->load_header('购买订单', true);
 			if ($com == 'land')
 				$this->load_header('认购订单', true);
+			if ($com == 'detail') {
+				$this->load_header('订单详情', true);
+				$this->load->model('Destination_model');
+				$this->load->model('Order_model');
+				$this->load->model('Product_model');
+				$this->load->model('Unit_model');
+				$this->load->model('User_model');
+				
+				$order = $this->Order_model->get_order($sub);
+				
+				$order['user'] = $this->User_model->get_user($order['user']);
+				$order['created_at'] = date('Y年m月d日', strtotime($order['created_at']));
+				$d1 =  $this->Destination_model->get_by_id($order['destination']);
+				$d2 =  $this->Destination_model->get_detail($order['destination']);
+				$order['destination'] = array_merge($d1, $d2);
+				$order['units'] = $this->Unit_model->get_all_available();
+				
+				$products = $this->decodeArray($order['product']);
+				foreach ($products as &$product) {
+					$product['detail'] = $this->Product_model->get_product($product['id']);
+				}
+				$order['product'] = $products;
+				
+				$data['order'] = $order;
+			}
 			$this->load->view('admin/topbar');
 			$this->load->view('admin/sidebar', array('com' => 'order', 'sub' => $com));
-			$this->load->view('admin/order_' . $com);
+			$this->load->view('admin/order_' . $com, $data);
 			$this->load_footer(true,'order_' . $com);
 		} else
 			redirect('admin/signin');

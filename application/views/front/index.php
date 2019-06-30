@@ -110,7 +110,7 @@
                     </div>
                 </div>
             </div>
-            <!-- <?php if (count($lands) > 0) { foreach ($lands as $land){?>
+            <?php if (count($lands) > 0) { foreach ($lands as $land){?>
             <div onclick="show_video(<?php echo $land['id'];?>)" class="row m-0 p-0 home_ad" style="background-image: url('<?php echo base_url($land['map']); ?>');">
                 <div style="width: 100%;position: absolute;bottom: 0;">
                     <p class="m-0 p-2">
@@ -127,7 +127,7 @@
                     </video>
                 </div>
             </div>
-            <?php } }?> -->
+            <?php } }?>
         </div>
         <div class="footer" style="max-width: 37.5rem;width: 100%;height: 45px;position: fixed;bottom: 0;border-color: transparent;background-color: #ffffff;border-top: 3px solid #F5F5F5;z-index: 1000;">
             <div class="row m-0 p-0" style="height: 100%;">
@@ -216,7 +216,7 @@
         location.href = '<?php echo base_url ('front/intro'); ?>';
     }
     function go_slot_game() {
-        // location.href = '<?php echo base_url ('front/stealing_vegetables'); ?>';
+        //location.href = '<?php //echo base_url ('front/stealing_vegetables'); ?>//';
     }
     function go_top_product() {
         location.href = '<?php echo base_url ('front/top_product'); ?>';

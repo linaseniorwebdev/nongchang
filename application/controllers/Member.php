@@ -272,8 +272,22 @@ class Member extends Base {
 
     public function warehouse() {
         if ($this->login) {
+        	$user_id = $this->user->getId();
+        	$this->load->model('Stock_model');
+        	$this->load->model('Product_model');
+        	$stocks = $this->Stock_model->get_user_stocks($user_id);
+        	$products = array();
+        	foreach ($stocks as $key => $stock) {
+        		$product = $this->Product_model->get_stock_product($stock['product']);
+        		array_push($products, $product);
+        	}
+        	$this->load->model('Unit_model');
+        	$units = $this->Unit_model->get_all_available();
+        	$data['stocks'] = $stocks;
+        	$data['products'] = $products;
+        	$data['units'] = $units;
             $this->load_header('我的仓库');
-            $this->load->view('member/warehouse');
+            $this->load->view('member/warehouse', $data);
             $this->load_footer();
         } else
             redirect('member/login');

@@ -1043,7 +1043,7 @@ class Api extends Base {
 					}
 					$coup = $this->Coupon_model->get_coupon($order->coupon);
 					$dist = $this->Destination_model->get_detail($order->destination);
-					$data[] = array($order->id, $order->orderno, $user['fullname'], $result, $order->total, $order->delivery, ($coup)?$coup['amount']:'0', $order->status, date( 'Y年m月d日', strtotime($order->created_at)), $dist['province'] . $dist['city'] . $dist['district'] . $dist['detail'], $order->remark, null, $user['id'], $order->product);
+					$data[] = array($order->id, $order->orderno, $user['fullname'], $result, $order->total, $order->delivery, ($coup)?$coup['amount']:'0', $order->status, date('Y年m月d日', strtotime($order->created_at)), $dist['province'] . $dist['city'] . $dist['district'] . $dist['detail'], ($order->remark)?:'', null, $user['id'], $order->product);
 				}
 
 				$output = array(
