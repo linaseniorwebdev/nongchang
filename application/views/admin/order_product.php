@@ -188,53 +188,24 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">更新订单状态</h4>
+				<h4 class="modal-title">更新物流详情</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
-				<div class="form-group" style="padding: 15px;">
-					<div class="row">
-						<span style="line-height: 30px;">物流单号：</span>
-						<input id="orderno" style="width: 60%;height: 30px;">
-					</div>
-					<div class="row mt-1">
-						<span style="line-height: 30px;">订单号：</span>&emsp;
-						<input id="orderno" style="width: 60%;height: 30px;">
-					</div>
-					<div class="row mt-1">
-						<div class="col-sm-6">
-							<div class="row">
-								<span style="line-height: 30px;">支付：</span>
-								<input id="total" style="width: 60%;height: 30px;">
-							</div>
-						</div>
-						<div class="col-sm-6">
-							<div class="row">
-								<span style="line-height: 30px;">运费：</span>
-								<input id="delivery" style="width: 60%;height: 30px;">
-							</div>
-						</div>						
-					</div>
-					<div class="row mt-1">
-						<div class="col-sm-6">
-							<div class="row">
-								<span style="line-height: 30px;">优惠：</span>
-								<input id="coupon" style="width: 60%;height: 30px;">
-							</div>
-						</div>
-						<div class="col-sm-6">
-							<div class="row">
-								<span style="line-height: 30px;">状态：</span>
-								<input id="status" style="width: 60%;height: 30px;">
-							</div>
-						</div>						
-					</div>
+                <input type="hidden" id="l_order_id" />
+				<div class="form-group">
+                    <label for="l_delivery_no">物流单号:</label>
+                    <input id="l_delivery_no" class="form-control" />
 				</div>
+                <div class="form-group">
+                    <label for="l_order_no">订单号:</label>
+                    <input id="l_order_no" class="form-control" readonly />
+                </div>
 				<div class="form-group mb-0">
-					<label for="remark">备注:</label>
-					<textarea class="form-control" id="remark" rows="6" placeholder="请在这里留言" style="resize: none;"></textarea>
+					<label for="l_delivery_remark">备注:</label>
+					<textarea class="form-control" id="l_delivery_remark" rows="6" placeholder="请在这里留言" style="resize: none;"></textarea>
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -242,12 +213,5 @@
 				<button type="button" class="btn btn-outline-primary" onclick="confirmLogistic()">确认</button>
 			</div>
 		</div>
-	</div>
-</div>
-
-<div class="new_order_alarm" style="width: 56px;height: 56px;position: fixed;z-index: 999;right: 50px;bottom: 50px;background: #c5c0c0;border-radius: 50%;text-align: center;padding: 6px;cursor: pointer;">
-	<i class="icon-bell purple font-large-2 float-right"></i>
-	<div class="new_order_cnt" style="width: 20px;height: 20px;border-radius: 50%;position: absolute;top: -5px;right: 0px;background: red;text-align: center;color: white;">
-		<span>1</span>
 	</div>
 </div>

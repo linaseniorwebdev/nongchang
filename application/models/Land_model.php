@@ -21,17 +21,21 @@ class Land_model extends CI_Model {
 		if ($postData['length'] != -1) {
 			$this->db->limit($postData['length'], $postData['start']);
 		}
+		$this->db->where('status', 1);
 		$query = $this->db->get();
 		return $query->result();
 	}
 
 	public function countAll() {
 		$this->db->from($this->table);
-		return $this->db->count_all_results();
+		$this->db->where('status', 1);
+		$query = $this->db->get();
+		return $query->num_rows();
 	}
 
 	public function countFiltered($postData) {
 		$this->_get_datatables_query($postData);
+		$this->db->where('status', 1);
 		$query = $this->db->get();
 		return $query->num_rows();
 	}
@@ -64,10 +68,10 @@ class Land_model extends CI_Model {
 			$this->db->order_by(key($order), $order[key($order)]);
 		}
 	}
-
+	
 	/**
 	 * Get land by id
-	 * @param $id
+	 * @param $land_id
 	 * @return array
 	 */
 	public function get_land($land_id) {
@@ -92,17 +96,18 @@ class Land_model extends CI_Model {
 	/**
 	 * Get all lands
 	 * @param $user_id
-	 * @return
+	 * @return mixed
 	 */
 	public function get_all_lands($user_id) {
-		$query = 'SELECT lands.id, lands.landnum, land_type.value AS type, blocks.name AS block_name, blocks.description AS block_description, blocks.picture AS block_image, provinces.name AS province, lands.detail, lands.map, lands.sold_at FROM lands, land_type, blocks, provinces WHERE lands.type = land_type.id AND lands.block = blocks.id AND blocks.province = provinces.id AND lands.owner = ' . $user_id . ' ORDER BY lands.id;';
+		$query = 'SELECT lands.id, lands.landnum, land_type.value AS type, blocks.name AS block_name, blocks.description AS block_description, blocks.picture AS block_image, provinces.name AS province, lands.detail, lands.map, lands.sold_at FROM lands, land_type, blocks, provinces WHERE lands.status = 1 AND lands.type = land_type.id AND lands.block = blocks.id AND blocks.province = provinces.id AND lands.owner = ' . $user_id . ' ORDER BY lands.id;';
 		return $this->db->query($query)->result_array();
 	}
 
 	public function get_sold_lands($user_id){
-        $query = 'SELECT lands.id, lands.landnum, land_type.value AS type, blocks.name AS block_name, blocks.description AS block_description, blocks.picture AS block_image, provinces.name AS province, lands.detail, lands.map, lands.area, lands.sold_at FROM lands, land_type, blocks, provinces WHERE lands.type = land_type.id AND lands.block = blocks.id AND blocks.province = provinces.id AND lands.owner = ' . $user_id . ' And lands.sold_at IS NOT NULL ORDER BY lands.id;';
+        $query = 'SELECT lands.id, lands.landnum, land_type.value AS type, blocks.name AS block_name, blocks.description AS block_description, blocks.picture AS block_image, provinces.name AS province, lands.detail, lands.map, lands.area, lands.sold_at FROM lands, land_type, blocks, provinces WHERE lands.status = 1 AND lands.type = land_type.id AND lands.block = blocks.id AND blocks.province = provinces.id AND lands.owner = ' . $user_id . ' And lands.sold_at IS NOT NULL ORDER BY lands.id;';
         return $this->db->query($query)->result_array();
     }
+    
 	/**
 	 * Function to add new land
 	 * @param $params

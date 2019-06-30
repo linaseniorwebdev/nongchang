@@ -71,10 +71,11 @@ $(document).ready(function() {
 			},
 			{
 				targets: [9],
-				width: '80px',
+				width: '140px',
 				render: function ( data, type, row ) {
 					let buffer = '<button type="button" class="btn btn-info round box-shadow-1" onclick="linkto(this)">链接通道</button>';
 					buffer += ('<input type="hidden" value="' + row[0] + '" />');
+					buffer += ('<button type="button" class="btn btn-danger round box-shadow-1" onclick="remove(this)" style="margin-left: 10px;">删除</button>');
 					return buffer;
 				},
 				className: 'text-center',
@@ -153,4 +154,47 @@ function saveChanges() {
 			$("#channels").modal('toggle');
 		}
 	);
+}
+
+function remove(obj) {
+	swal({
+		title: "确定吗？",
+		text: "此土地将被删除。",
+		icon: "warning",
+		buttons: {
+			cancel: {
+				text: "取消",
+				value: null,
+				visible: true,
+				className: "",
+				closeModal: true,
+			},
+			confirm: {
+				text: "确定",
+				value: true,
+				visible: true,
+				className: "",
+				closeModal: false
+			}
+		}
+	}).then(isConfirm => {
+		if (isConfirm) {
+			$.post(
+				'../../api/land/update',
+				{
+					id: obj.previousElementSibling.value,
+					status: 0
+				},
+				function (data) {
+					data = JSON.parse(data);
+					if (data.status === "success") {
+						table.ajax.reload( null, false );
+						swal("更改成功!", "", "success");
+					} else {
+						swal(data.reason, "", "warning");
+					}
+				},
+			);
+		}
+	});
 }

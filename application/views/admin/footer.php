@@ -11,6 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="public/vendors/js/tables/datatable/buttons.bootstrap4.min.js"></script>
 <script src="public/vendors/js/tables/datatable/dataTables.fixedHeader.min.js"></script>
 <script src="public/vendors/js/extensions/sweetalert.min.js"></script>
+<script src="public/vendors/js/extensions/toastr.min.js"></script>
 <script src="public/vendors/js/charts/jvector/jquery-jvectormap-2.0.3.min.js"></script>
 <script src="public/vendors/js/charts/jvector/china.js"></script>
 <script src="public/vendors/js/forms/select/select2.full.min.js"></script>

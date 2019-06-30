@@ -75,10 +75,11 @@ class Product_model extends CI_Model {
 	public function get_product($id) {
 		return $this->db->get_where('products', array('id' => $id, 'status'=> 1))->row_array();
 	}
+	
 	/**
 	 * Get product by id at stock
-	 * @param $id
-	 *
+	 * @param $product_id
+	 * @return mixed
 	 */
 	public function get_stock_product($product_id) {
 		return $this->db->get_where('products', array('id' => $product_id))->row_array();

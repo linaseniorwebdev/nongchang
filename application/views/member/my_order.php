@@ -345,8 +345,11 @@
                             }
                             else if (order['status'] == 3) {
                                 html += '<img class="action_btn" src="public/img/view_logistics.png">';
-                                html += '<img class="action_btn" src="public/img/buy_btn_again.png">';
-                                html += '<img onclick="give_feedback()" class="action_btn" src="public/img/feedback.png">';
+                                html += '<img onclick="buy_again('+ order['id'] +')" class="action_btn" src="public/img/buy_btn_again.png">';
+                                if (order['review'] == 0) 
+                                    html += '<img onclick="give_evaluation('+ order['id'] +')" class="action_btn" src="public/img/feedback.png">';
+                                
+
                             }
                             else if (order['status'] == 4) {
                                 html += '<img onclick="delete_order('+ order['id'] +')" class="action_btn" src="public/img/delete_order.png">';
@@ -453,6 +456,12 @@
             }
         );
     }
+    function give_evaluation(order_id){
+        location.href = '<?php echo base_url ('member/go_evaluation?order_id='); ?>' + order_id;
+    }
+    function buy_again(order_id){
+
+    }
     function delete_order(order_id) {
         $.post("<?php echo base_url('member/delete_order') ?>", {order_id:order_id},
             function (data) {
@@ -466,11 +475,11 @@
             }
         );
     }
-    function evaluation(id) {
-        selected_bottom_line(id);
-        var html = '';
-        html += '';
-    }
+    // function evaluation(id) {
+    //     selected_bottom_line(id);
+    //     var html = '';
+    //     html += '';
+    // }
     function selected_bottom_line(id) {
         $('#all_bottom').css('display', 'none');
         $('#pending_bottom').css('display', 'none');

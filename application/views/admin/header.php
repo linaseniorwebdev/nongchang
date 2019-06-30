@@ -20,7 +20,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="public/vendors/css/tables/extensions/buttons.dataTables.min.css" />
 	<link rel="stylesheet" href="public/vendors/css/tables/datatable/buttons.bootstrap4.min.css" />
 	<link rel="stylesheet" href="public/vendors/css/tables/extensions/fixedHeader.dataTables.min.css" />
-	<link rel="stylesheet" href="public/vendors/css/extensions/sweetalert.css" />
+    <link rel="stylesheet" href="public/vendors/css/extensions/sweetalert.css" />
+    <link rel="stylesheet" href="public/vendors/css/extensions/toastr.css" />
 
 	<link rel="stylesheet" href="public/css/app.css" />
 	<link rel="stylesheet" href="public/css/core/menu/menu-types/vertical-menu-modern.css" />

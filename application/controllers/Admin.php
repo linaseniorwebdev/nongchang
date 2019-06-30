@@ -211,6 +211,7 @@ class Admin extends Base {
 	/**
 	 * 订单管理
 	 * @param string $com
+	 * @param null $sub
 	 */
 	public function order($com = 'product', $sub = null) {
 		if ($this->admin) {

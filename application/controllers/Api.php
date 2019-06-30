@@ -309,7 +309,7 @@ class Api extends Base {
 	}
 
 	/**
-	 * Land types processing module
+	 * Land processing module
 	 * @param string $com
 	 * @param string $sub
 	 */
@@ -421,6 +421,27 @@ class Api extends Base {
 			);
 
 			echo json_encode($output);
+		} elseif ($com === 'update') {
+			$result = array('status' => 'fail');
+			
+			if ($this->post_exist()) {
+				$this->load->model('Land_model');
+				
+				$id = $this->input->post('id');
+				$land = $this->Land_model->get_land($id);
+				if ($land['owner'] || $land['sold_at']) {
+					if ($land['owner'] && $land['sold_at']) {
+						$result['reason'] = '无法删除此土地。它由用户拥有。';
+					} else {
+						$result['reason'] = '无法删除此土地。它正在处理中。';
+					}
+				} else {
+					$this->Land_model->update_land($id, array('status' => $this->input->post('status')));
+					$result['status'] = 'success';
+				}
+			}
+			
+			echo json_encode($result);
 		}
 	}
 
@@ -1043,7 +1064,7 @@ class Api extends Base {
 					}
 					$coup = $this->Coupon_model->get_coupon($order->coupon);
 					$dist = $this->Destination_model->get_detail($order->destination);
-					$data[] = array($order->id, $order->orderno, $user['fullname'], $result, $order->total, $order->delivery, ($coup)?$coup['amount']:'0', $order->status, date('Y年m月d日', strtotime($order->created_at)), $dist['province'] . $dist['city'] . $dist['district'] . $dist['detail'], ($order->remark)?:'', null, $user['id'], $order->product);
+					$data[] = array($order->id, $order->orderno, $user['fullname'], $result, $order->total, $order->delivery, ($coup)?$coup['amount']:'0', $order->status, date('Y年m月d日', strtotime($order->created_at)), $dist['province'] . $dist['city'] . $dist['district'] . $dist['detail'], ($order->remark)?:'', null, $user['id'], $order->product, ($order->delivery_no)?:'', ($order->delivery_remark)?:'');
 				}
 
 				$output = array(
@@ -1098,16 +1119,18 @@ class Api extends Base {
 				}
 				$this->Income_model->add_income($params);
 			}
-			elseif ($sub === 'create_trade_no') {
-				$id = $this->input->post('id');
-				$logistic_no = 'LGT'.$this->getUID();
+			elseif ($sub === 'delivery') {
 				$this->Order_model->update_order(
-					$id,
+					$this->input->post('order_id'),
 					array(
-						'order_trade_no'    => $logistic_no
+						'delivery_no'     => $this->input->post('delivery_no'),
+						'delivery_remark' => $this->input->post('delivery_remark')
 					)
 				);
 			}
+		} elseif ($com === 'check') {
+			$result = $this->Order_model->new_orders();
+			echo json_encode(array('orders' => $result));
 		}
 	}
 

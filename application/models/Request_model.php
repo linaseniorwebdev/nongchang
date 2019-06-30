@@ -73,13 +73,17 @@ class Request_model extends CI_Model {
 	public function get_request($id) {
 		return $this->db->get_where('requests', array('id' => $id))->row_array();
 	}
-    /**
-     * Get user requests
-     */
+	
+	/**
+	 * Get user requests
+	 * @param $user_id
+	 * @return mixed
+	 */
     function get_user_request($user_id) {
         $this->db->order_by('id', 'desc');
         return $this->db->get_where('requests', array('requester' => $user_id))->row_array();
     }
+    
 	/**
 	 * Get all requests
 	 */

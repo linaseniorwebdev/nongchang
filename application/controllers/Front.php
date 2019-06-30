@@ -638,8 +638,8 @@ class Front extends Base {
 						$result['status'] = 'success';
 					}
 				}
-				$detail_img = $this->input->post('detail_img');
 				
+				$detail_img = json_decode($this->input->post('detail_img'), true);
 				for($i = 0; $i < count($detail_img); $i++){
 					
 					$img = $detail_img[$i];

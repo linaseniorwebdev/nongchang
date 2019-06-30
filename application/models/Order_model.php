@@ -168,12 +168,31 @@ class Order_model extends CI_Model {
 	public function delete_order($id) {
 		return $this->db->delete('orders', array('id' => $id));
 	}
-
+	
 	/**
 	 * Get order by id
+	 * @param $id
+	 * @return mixed
 	 */
 	public function get_extra_information($id) {
 		$query = 'SELECT destinations.id, provinces.name AS province, cities.name AS city, districts.name AS district, destinations.detail FROM destinations, provinces, cities, districts WHERE destinations.district = districts.id AND districts.city = cities.id AND cities.province = provinces.id AND destinations.id = ' . $id . ';';
 		return $this->db->query($query)->row_array();
+	}
+	
+	/**
+	 * Check for new orders
+	 */
+	public function new_orders() {
+		$result = '';
+		$rows = $this->db->get_where('orders', array('read' => 0))->result_array();
+		foreach ($rows as $row) {
+			if (strlen($result) < 1) {
+				$result = $row['orderno'];
+			} else {
+				$result .= ('，' . $row['orderno']);
+			}
+			$this->update_order($row['id'], array('read' => 1));
+		}
+		return $result;
 	}
 }

@@ -1,5 +1,19 @@
 let table, status, colors, curID, curState, curOption;
 
+function poll() {
+	$.post(
+		'../../api/order/check',
+		function (data) {
+			data = JSON.parse(data);
+			let orders = data.orders;
+			if (orders.length > 1) {
+				toastr.info('新订单到了。订单号：' + data.orders, '系统通知', {positionClass: 'toast-bottom-right', containerId: 'toast-bottom-right'});
+			}
+		}
+	);
+	setTimeout(poll, 1000);
+}
+
 $(document).ready(function() {
 	status = ['待付款', '待发货', '待收货', '已完成', '已关闭', '已取消'];
 	colors = ['secondary', 'info', 'primary', 'success', 'warning', 'danger'];
@@ -97,8 +111,11 @@ $(document).ready(function() {
 					buffer += ('<input type="hidden" value="' + row[0] + '" />');
 					buffer += ('<input type="hidden" value="' + row[7] + '" />');
 					buffer += ('<input type="hidden" value="' + row[10] + '" />');
-					if (row[7] == 1) {
-						buffer += '<button type="button" class="btn btn-success round box-shadow-1" onclick="logistic_order(' + row[0] + ')" style="margin-left: 10px;">物流</button>';
+					if (row[7] == 1 || row[7] == 2) {
+						buffer += '<button type="button" class="btn btn-success round box-shadow-1" onclick="logistic_order(this)" style="margin-left: 10px;">物流</button>';
+						buffer += ('<input type="hidden" value="' + row[1] + '" />');
+						buffer += ('<input type="hidden" value="' + row[14] + '" />');
+						buffer += ('<input type="hidden" value="' + row[15] + '" />');
 					}
 					return buffer;
 				},
@@ -131,8 +148,9 @@ $(document).ready(function() {
 		}
 	});
 
-	$(".order_status_btn").on("click", get_order_by_status );
+	$(".order_status_btn").on("click", get_order_by_status);
 
+	poll();
 });
 
 function get_order_by_status(){
@@ -311,9 +329,12 @@ function update(obj) {
 	$("#updateModal").modal({backdrop: 'static', keyboard: false});
 }
 
-function logistic_order(row){
+function logistic_order(obj) {
+	$('#l_order_id').val(obj.previousElementSibling.previousElementSibling.previousElementSibling.value);
+	$('#l_order_no').val(obj.nextElementSibling.value);
+	$('#l_delivery_no').val(obj.nextElementSibling.nextElementSibling.value);
+	$('#l_delivery_remark').val(obj.nextElementSibling.nextElementSibling.nextElementSibling.value);
 	$("#logisticModal").modal({backdrop: 'static', keyboard: false});
-	console.log(row[1]);
 }
 
 function confirmUpdate() {
@@ -334,29 +355,19 @@ function confirmUpdate() {
 }
 
 function confirmLogistic() {
-	// $.post(
-	// 	'../../api/order/product/create_trade_no',
-	// 	{
-	// 		id: order_id
-	// 	},
-	// 	function (data) {
-	// 		swal("成功!", "", "success");
-	// 	}
-	// );
-	// $.post(
-	// 	'../../api/order/product/update',
-	// 	{
-	// 		id: curID,
-	// 		prev: curState,
-	// 		status: curOption,
-	// 		remark: $("#remark").val()
-	// 	},
-	// 	function (data) {
-	// 		table.ajax.reload( null, false );
-	// 		swal("处理成功!", "", "success");
-			$("#updateModal").modal("toggle");
-		// }
-	// );
+	$.post(
+		'../../api/order/product/delivery',
+		{
+			order_id		: $('#l_order_id').val(),
+			delivery_no		: $('#l_delivery_no').val(),
+			delivery_remark	: $('#l_delivery_remark').val(),
+		},
+		function (data) {
+			table.ajax.reload( null, false );
+			swal("处理成功!", "", "success");
+			$("#logisticModal").modal("toggle");
+		}
+	);
 }
 
 $("#option1").click(function() {

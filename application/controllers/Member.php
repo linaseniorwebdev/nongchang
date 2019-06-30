@@ -723,4 +723,44 @@ class Member extends Base {
             redirect('member/login');
     }
 
+    public function go_evaluation(){
+    	if ($this->login) {
+    		$data['order_id'] = $this->input->get('order_id');
+    		$this->load_header('发表评价');
+            $this->load->view('member/evaluation', $data);
+            $this->load_footer();
+    	}
+    	else
+            redirect('member/login');
+    }
+
+    public function give_evaluation(){
+    	if ($this->login) {
+    		$data['state'] = 'fail';
+    		$user = $this->user->getId();
+    		$order_id = $this->input->post('order_id');
+    		$params['writer'] = $user;
+    		$params['order'] = $order_id;
+    		$params['note'] = $this->input->post('note');
+    		$params['rating'] = $this->input->post('rating');
+    		$this->load->model('Order_model');
+    		$order = $this->Order_model->get_order($order_id);
+    		$this->load->model('Product_model');
+    		$products = $this->decodeArray($order['product']);
+    		$this->load->model('Review_model');
+    		foreach ($products as $product) {
+    			$params['product'] = $product['id'];
+    			$result = $this->Review_model->add_review($params);
+    			if ($result != null) 
+    				$data['state'] = 'success';
+    			else 
+    				$data['state'] = 'fail';
+    		}
+    		$update_order['review'] = 1;
+    		$this->Order_model->update_order($order_id, $update_order);
+    		echo json_encode($data);
+    	}
+    	else
+            redirect('member/login');
+    }
 }

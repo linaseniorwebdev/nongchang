@@ -226,7 +226,7 @@
         }
         var formData = new FormData();
         formData.append("picture", dataURL);
-        if (detailURL.length > 0) { formData.append("detail_img", detailURL); }
+        formData.append("detail_img", JSON.stringify(detailURL));
         formData.append('land', land);
         formData.append("name", product_name);
         formData.append("type", type);
