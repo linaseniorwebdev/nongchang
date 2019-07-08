@@ -10,7 +10,12 @@ class Review_model extends CI_Model {
 	public function get_review($id) {
 		return $this->db->get_where('reviews', array('id' => $id))->row_array();
 	}
- 
+ 	/**
+	 * Get all reviews
+	 */
+ 	public function get_order_review($order_id) {
+		return $this->db->get_where('reviews', array('order' => $order_id))->row_array();
+	}
 	/**
 	 * Get all reviews
 	 */

@@ -210,10 +210,16 @@
         height: 35px;
         margin-right: 10px;
     }
+    .star-rating {
+      line-height:32px;
+      font-size:2em;
+    }
+
+    .star-rating .mdi-star{color: yellow;}
 </style>
 <script>
     $(document).ready(function() {
-        my_orders(0, 'all');
+        my_orders(0, 'all');        
     } );
     function show_searchbar() {
         $('#searchbar').css('display', 'block');
@@ -248,12 +254,14 @@
         selected_bottom_line(id);
         $.post("<?php echo base_url('member/my_order') ?>", {status: status},
             function (data) {
+            	// console.log(data);
                 var result = JSON.parse(data);
                 if (result.state == "success") {
                     var orders = result['orders'];
                     var products = result['products'];
                     var pt_ids_amounts = result['pt_ids_amounts'];
-                    console.log(orders);
+                    var reviews = result['reviews'];
+                    console.log(reviews);
                     if (orders.length > 0) {
                         if (status == 0) {
 
@@ -269,6 +277,7 @@
 
                             var order = orders[i];
                             var product = products[i];
+                            var review = reviews[i];
                             var pt_cnt = 0;
                             var total_price = 0;
                             html += '<div class="order_item">';
@@ -355,6 +364,35 @@
                                 html += '<img onclick="delete_order('+ order['id'] +')" class="action_btn" src="public/img/delete_order.png">';
                             }
                             html += '</div>';
+                            if (order['status'] == 3 && order['review'] == 1) {
+                            	html += '<div class="row" style="padding: 5px !important;border-bottom: 1px solid #bbbbbb;clear:both;">';
+							    html += '<div style="width: 30%;float: left;text-align: center;line-height:33.6px;">';
+							    // html += '<span>描述相符</span>';
+							    html += '<span>评价</span>';
+							    html += '</div>';
+							    html += '<div style="width: 70%;float: left;text-align: center;">';
+							    html += '<div class="row">';
+							    html += '<div class="col-lg-12">';
+							    html += '<div class="star-rating">';
+							    for(var k = 0; k < review['rating']; k++){
+							    	html += '<span class="mdi mdi-star"></span>';
+							    }
+							    for(var p = 0; p < 5-review['rating']; p++){
+							    	html += '<span class="mdi mdi-star-outline"></span>';
+							    }							    					   
+							    html += '</div>';
+							    html += '</div>';
+							    html += '</div>';
+							    html += '</div>';
+							    // html += '<div style="width: 25%;float: left;text-align: center;line-height:33.6px;">';
+							    // html += '<span>非常好</span>';
+							    // html += '</div>';
+							    html += '<div style="width: 100%;padding:10px 20px;clear:both;text-align:left">';
+							    html += '<span>'+ review['note']+'</span>';
+							    html += '</div>';
+							    html += '</div>';
+                            }
+                            
                             html += '</div>';
                             html += '</div>';
                         }
@@ -375,6 +413,8 @@
         );
         // if (status == 0)
     }
+
+
     function show_description(i , j) {
         $('#description'+i+'_'+j).css('display', 'block');
     }

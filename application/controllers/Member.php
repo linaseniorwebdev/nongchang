@@ -557,9 +557,11 @@ class Member extends Base {
                     }
 //                    file_put_contents('debug.txt', date("Y-m-d H:i:s") . ' `orderlength` = ' . count($data['orders']));
                     $this->load->model('Product_model');
+                    $this->load->model('Review_model');
                     $prods = array();
                     $pt_ids_amounts = array();
-                    foreach ($data['orders'] as $order){
+                    $reviews = array();
+                    foreach ($data['orders'] as $key => $order){
                         $products = $this->decodeArray($order['product']);
                         array_push($pt_ids_amounts, $products);
                         $pts = array();
@@ -568,10 +570,18 @@ class Member extends Base {
                             array_push($pts, $pt);
                         }
                         array_push($prods, $pts);
+
+                        // if ($order['status'] == 3 && $order['review'] == 1) {
+                        	$review = $this->Review_model->get_order_review($order['id']);
+                        	array_push($reviews, $review);
+                        // }
+                        
                     }
                     $data['pt_ids_amounts'] = $pt_ids_amounts;
                     $data['products'] = $prods;
+                    $data['reviews'] = $reviews;
                     $data['state'] = 'success';
+
                 } catch (Exception $ex){
                     $data['reason'] =  $ex->getMessage();
                 }
