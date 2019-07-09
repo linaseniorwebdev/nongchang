@@ -35,7 +35,7 @@
                 <div style="width: 100%;padding: 0 4%;border-bottom: 2px solid #F7F7F7;background: white;">
                     <div class="row m-0 p-0 text15_regular" style="height: 50px;line-height: 50px;">
                         <span class="black444" style="width: 25%;">手机号码</span>
-                        <input type="text" class="text14_regular text_placeholder" name="phone" id="phone" readonly value="<?php echo $user['phone']; ?>" style="width: 75%;border: none;height: 50px;padding: 5px 10px;outline: 0;">
+                        <input type="text" class="text14_regular text_placeholder" name="phone" id="phone" readonly value="<?php echo substr($user['phone'],0,3);echo "....";echo substr($user['phone'],7,11); ?>" style="width: 75%;border: none;height: 50px;padding: 5px 10px;outline: 0;">
                     </div>
                 </div>
                 <div style="width: 100%;padding: 0 4%;background: white;">

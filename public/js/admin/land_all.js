@@ -71,11 +71,18 @@ $(document).ready(function() {
 			},
 			{
 				targets: [9],
-				width: '140px',
+				width: '280px',
 				render: function ( data, type, row ) {
 					let buffer = '<button type="button" class="btn btn-info round box-shadow-1" onclick="linkto(this)">链接通道</button>';
 					buffer += ('<input type="hidden" value="' + row[0] + '" />');
-					buffer += ('<button type="button" class="btn btn-danger round box-shadow-1" onclick="remove(this)" style="margin-left: 10px;">删除</button>');
+					buffer += ('<button type="button" class="btn btn-primary round box-shadow-1" onclick="modify(this)" style="margin-left: 10px;">修改</button>');
+					if (row[10] == "1") {
+						buffer += ('<button type="button" class="btn btn-secondary round box-shadow-1" onclick="disable(this)" style="margin-left: 10px;">禁用</button>');
+					}
+					if (row[10] == "0") {
+						buffer += ('<button type="button" class="btn btn-success round box-shadow-1" onclick="enable(this)" style="margin-left: 10px;">启用</button>');
+					}
+					buffer += ('<button type="button" class="btn btn-danger round box-shadow-1" onclick="removeLand(this)" style="margin-left: 10px;">删除</button>');
 					return buffer;
 				},
 				className: 'text-center',
@@ -156,7 +163,7 @@ function saveChanges() {
 	);
 }
 
-function remove(obj) {
+function removeLand(obj) {
 	swal({
 		title: "确定吗？",
 		text: "此土地将被删除。",
@@ -182,7 +189,91 @@ function remove(obj) {
 			$.post(
 				'../../api/land/update',
 				{
-					id: obj.previousElementSibling.value,
+					id: obj.previousElementSibling.previousElementSibling.previousElementSibling.value,
+					status: 2
+				},
+				function (data) {
+					data = JSON.parse(data);
+					if (data.status === "success") {
+						table.ajax.reload( null, false );
+						swal("更改成功!", "", "success");
+					} else {
+						swal(data.reason, "", "warning");
+					}
+				}
+			);
+		}
+	});
+}
+
+function enable(obj) {
+	swal({
+		title: "确定吗？",
+		icon: "warning",
+		buttons: {
+			cancel: {
+				text: "取消",
+				value: null,
+				visible: true,
+				className: "",
+				closeModal: true,
+			},
+			confirm: {
+				text: "确定",
+				value: true,
+				visible: true,
+				className: "",
+				closeModal: false
+			}
+		}
+	}).then(isConfirm => {
+		if (isConfirm) {
+			$.post(
+				'../../api/land/update',
+				{
+					id: obj.previousElementSibling.previousElementSibling.value,
+					status: 1
+				},
+				function (data) {
+					data = JSON.parse(data);
+					if (data.status === "success") {
+						table.ajax.reload( null, false );
+						swal("更改成功!", "", "success");
+					} else {
+						swal(data.reason, "", "warning");
+					}
+				}
+			);
+		}
+	});
+}
+
+function disable(obj) {
+	swal({
+		title: "确定吗？",
+		icon: "warning",
+		buttons: {
+			cancel: {
+				text: "取消",
+				value: null,
+				visible: true,
+				className: "",
+				closeModal: true,
+			},
+			confirm: {
+				text: "确定",
+				value: true,
+				visible: true,
+				className: "",
+				closeModal: false
+			}
+		}
+	}).then(isConfirm => {
+		if (isConfirm) {
+			$.post(
+				'../../api/land/update',
+				{
+					id: obj.previousElementSibling.previousElementSibling.value,
 					status: 0
 				},
 				function (data) {
@@ -193,8 +284,12 @@ function remove(obj) {
 					} else {
 						swal(data.reason, "", "warning");
 					}
-				},
+				}
 			);
 		}
 	});
+}
+
+function modify(obj) {
+	location.href = "edit/" + obj.previousElementSibling.value;
 }

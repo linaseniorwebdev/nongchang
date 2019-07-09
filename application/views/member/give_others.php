@@ -26,7 +26,7 @@
                     <span>当前库存</span>
                 </div>
             </div>
-            <div style="width: 100%;background: white;">
+            <div id="products" style="width: 100%;background: white;">
                 <div class="row m-0 text14_regular black444" style="width: 100%;height: 35px;line-height: 35px;padding: 0 5%;">
                     <div style="width: 25%;text-align: center">
                         <span>土豆</span>
@@ -64,6 +64,22 @@
 </div>
 
 <script>
+    $(document).ready(function() {
+        // load_products();     
+    });
+    function load_products(){
+        $.get("<?php echo base_url('member/warehouse_products') ?>",
+            function (data) {
+                var result = JSON.parse(data);
+                if (result.state == "success") {
+                    var products = result['products'];
+                }
+                else{
+                    swal("提示", result.reason, "warning");
+                }
+            }
+        );
+    }
     function plus_cnt() {
         var cnt = $('#product_cnt').text();
         var int_cnt = parseInt(cnt);

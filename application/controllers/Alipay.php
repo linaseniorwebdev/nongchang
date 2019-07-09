@@ -66,9 +66,14 @@ class Alipay extends Base {
         $result = $this->Alipay->rsaCheck($_GET);
         if ($result == true) {
             $this->load->model('Order_model');
+            $this->load->model('Land_model');
             if ($ordertp === 'product') {
                 $this->Order_model->update_order($orderid, array('status' => 1));
-
+                $order = $this->Order_model->get_order($orderid);
+                $land_id = $order->land;
+                $db['owner'] = $order->user;
+                $db['sold_at'] = date('Y-m-d H:i:s');
+                $this->Land_model->update_land($land_id, $db);
                 echo '
                     <!DOCTYPE html>
                     <html lang="zh-CN">

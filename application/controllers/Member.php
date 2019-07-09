@@ -529,14 +529,29 @@ class Member extends Base {
     }
 
     public function give_others() {
-        if ($this->login) {
+        if ($this->login) {        	
             $this->load_header('赠送他人');
             $this->load->view('member/give_others');
             $this->load_footer();
         } else
             redirect('member/login');
     }
+    public function warehouse_products(){
+    	if ($this->login) {
+    		$data['state'] = 'fail';
+    		$user = $this->user->getId();
+            try{
+            	
+            } 
+            catch (Exception $ex){
+                $data['reason'] =  $ex->getMessage();
+            }
+            echo json_encode($data);
+    	}
+    	else
+            redirect('member/login');
 
+    }
     public function my_order() {
         if ($this->login) {
             $user = $this->user->getId();
@@ -773,4 +788,45 @@ class Member extends Base {
     	else
             redirect('member/login');
     }
+
+	public function buy_again() {
+		if ($this->login) {
+			$data['status'] = 'fail';
+			try{
+				$user = $this->user->getId();
+				$this->load->model('Order_model');
+				$this->load->model('Destination_model');
+				$this->load->model('Cart_model');
+				$this->load->model('Product_model');
+				$shopping_address = $this->Destination_model->get_default_destination($user);
+				$order['orderno'] = 'NCP' . $user . $this->getUID();
+				$order['type'] = 0;
+				$order['user'] = $user;
+				$order['product'] = $this->input->post('product');
+				$order['total'] = $this->input->post('total');
+				$order['delivery'] = $this->input->post('delivery');
+				$coupon = $this->input->post('coupon');
+				if ($coupon && (int)$coupon > 0) {
+					$order['coupon'] = $this->input->post('coupon');
+				}
+				$order['destination'] = $shopping_address['id'];
+				$order['created_at'] = date('Y-m-d H:i:s');
+				$order['status'] = 0;
+				$order_product = $this->Order_model->add_order($order);
+				$cart = $this->input->post('cart');
+				
+				if ($order_product) {
+					$data['status'] = 'success';
+					$data['orderno'] = $order['orderno'];
+					$data['orderid'] = $order_product;
+				}
+			}catch (Exception $ex){
+                $data['reason'] =  $ex->getMessage();
+            }
+			echo json_encode($data);
+
+		} else {
+			redirect('member/login');
+		}
+	}    
 }

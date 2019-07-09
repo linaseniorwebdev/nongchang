@@ -159,7 +159,7 @@
                         for (var i=0; i<task_types.length; i++){
                             var task_type = task_types[i];
                             if (i==0){
-                                html += '<div onclick="click_task_type('+ i +','+task_type['id']+', '+ task_type['cost'] + ')" class="col-sm-4" style="width: 33.333%;padding: 2% 2%;">';
+                                html += '<div onclick="click_task_type('+ i +','+task_type['id']+', '+ task_type['cost'] + ',\''+task_type['name'] +'\')" class="col-sm-4" style="width: 33.333%;padding: 2% 2%;">';
                                 html += '<div id="task_type_item'+i+'" style="width: 100%;height: 44px;background: #8B572A;border-radius: 8px;text-align: center;line-height: 44px;">';
                                 html += '<span id="task_type_name'+i+'" class="text14_medium whiteFFF">'+ task_type['name'] +'</span>';
                                 html += '<img id="selected_type_item'+i+'" src="public/img/task/check_white.png" style="height: 30%;position: absolute;top: 14px;right: 14px;">';
@@ -169,7 +169,7 @@
                                 selected_type_id = task_type['id'];
                             }
                             else{
-                                html += '<div onclick="click_task_type('+ i +','+task_type['id']+', '+ task_type['cost'] +')" class="col-sm-4" style="width: 33.333%;padding: 2% 2%;">';
+                                html += '<div onclick="click_task_type('+ i +','+task_type['id']+', '+ task_type['cost'] +',\''+task_type['name'] +'\')" class="col-sm-4" style="width: 33.333%;padding: 2% 2%;">';
                                 html += '<div id="task_type_item'+i+'" style="width: 100%;height: 44px;background: #F5A623;border-radius: 8px;text-align: center;line-height: 44px;">';
                                 html += '<span id="task_type_name '+i+'" class="text14_medium whiteFFF">'+ task_type['name'] +'</span>';
                                 html += '<img id="selected_type_item'+i+'" src="public/img/task/check_white.png" style="height: 30%;position: absolute;top: 14px;right: 14px;display: none;">';
@@ -194,7 +194,8 @@
             }
         );
     }
-    function click_task_type(key, task_type_id, cost) {
+    var global_task_name = '';
+    function click_task_type(key, task_type_id, cost, task_name) {
         for(var i=0 ;i<task_types_cnt; i++){
             $('#task_type_item'+i).css('background' , '#F5A623');
             $('#selected_type_item'+i).css('display' , 'none');
@@ -203,6 +204,7 @@
         $('#selected_type_item'+key).css('display' , 'block');
         $('#cost').text(cost);
         selected_type_id = task_type_id;
+        global_task_name = task_name;
         compute_total_price();
     }
     function compute_total_price(){
@@ -256,6 +258,7 @@
             swal("警告", "请选择土地。", "warning");
             return;
         }
+        
         var description = $('#description').val();
         var price = parseFloat($('#labour_unit_price').text());
         $.post("<?php echo base_url('front/publish_my_task') ?>", {type: selected_type_id, land_id: land_id, description: description, price:price},
@@ -267,7 +270,7 @@
                     } else {
                         // Alipay
                         // console.log(result.task_id);
-                        $('input[name="title"]').val("支付确认：发饰任务");
+                        $('input[name="title"]').val("发饰任务：" + global_task_name);
                         $('input[name="amount"]').val(price);
                         $('input[name="orderid"]').val(result.task_id);
                         $('#agent_alipay').submit();

@@ -161,10 +161,16 @@
             </div>
         </div>
     </div>
+    <form id="agent_alipay" action="<?php echo base_url('alipay/do_pay/wap'); ?>" method="post">
+        <input type="hidden" name="ordertp" value="product" />
+        <input type="hidden" name="title" />
+        <input type="hidden" name="amount" />
+        <input type="hidden" name="orderid" />
+    </form>
 </div>
 
 <style>
-    .order_items{
+    .order_items{        
         position: absolute;
         top: 95px;
         bottom: 0;
@@ -172,6 +178,7 @@
         overflow-y: scroll;
     }
     .order_item{
+        float: left;
         width: 100%;
         padding: 5px 10px;
         border-bottom: 20px solid #F5F5F5;
@@ -201,7 +208,7 @@
     }
     .item_footer{
         width: 100%;
-        height: 80px;
+        /*height: 80px;*/
         padding: 10px 0;
         text-align: right;
     }
@@ -250,6 +257,8 @@
     function go_task() {
         location.href = '<?php echo base_url ('front/task'); ?>';
     }
+    var selected_order_again = 0;
+    var global_orders, global_products, global_pt_ids_amounts;
     function my_orders(id, status) {
         selected_bottom_line(id);
         $.post("<?php echo base_url('member/my_order') ?>", {status: status},
@@ -258,8 +267,11 @@
                 var result = JSON.parse(data);
                 if (result.state == "success") {
                     var orders = result['orders'];
+                    global_orders = orders;
                     var products = result['products'];
+                    global_products = products;
                     var pt_ids_amounts = result['pt_ids_amounts'];
+                    global_pt_ids_amounts = pt_ids_amounts;
                     var reviews = result['reviews'];
                     console.log(reviews);
                     if (orders.length > 0) {
@@ -333,11 +345,12 @@
                                 html += '<span class="text13_regular black444">'+ product[j]['description'] +'</span>';
                                 html += '</div>';
                                 pt_cnt += pt_ids_amounts[i][j]['amount'];
-                                total_price += pt_cnt * product[j]['price'] + 5; // 运费：￥5
+                                total_price += pt_ids_amounts[i][j]['amount'] * parseFloat(product[j]['price']); // 运费：￥5
                             }
+                            total_price += parseFloat(order['delivery']);
                             html += '<div class="item_footer">';
                             html += '<p class="text13_regular black999">共'+ pt_cnt +'件，应付总额：<span class="text13_medium redFA5359" style="float: right;">¥'+ total_price +'</span></p>';
-                            html += '<div class="row m-0 p-0" style="float: right;">';
+                            html += '<div class="row m-0 p-0" style="float: right;padding-bottom: 10px !important;">';
                             if (order['status'] == 0) {
                                 html += '<img onclick="cancel_order('+ order['id'] +', 0)" class="action_btn" src="public/img/cancel_order.png">';
                                 html += '<img onclick="show_pay_modal('+ order['id'] +', '+total_price+')" class="action_btn" src="public/img/pay_now.png">';
@@ -354,7 +367,7 @@
                             }
                             else if (order['status'] == 3) {
                                 html += '<img class="action_btn" src="public/img/view_logistics.png">';
-                                html += '<img onclick="buy_again('+ order['id'] +')" class="action_btn" src="public/img/buy_btn_again.png">';
+                                html += '<img onclick="buy_again('+i+')" class="action_btn" src="public/img/buy_btn_again.png">';
                                 if (order['review'] == 0) 
                                     html += '<img onclick="give_evaluation('+ order['id'] +')" class="action_btn" src="public/img/feedback.png">';
                                 
@@ -364,33 +377,37 @@
                                 html += '<img onclick="delete_order('+ order['id'] +')" class="action_btn" src="public/img/delete_order.png">';
                             }
                             html += '</div>';
-                            if (order['status'] == 3 && order['review'] == 1) {
-                            	html += '<div class="row" style="padding: 5px !important;border-bottom: 1px solid #bbbbbb;clear:both;">';
-							    html += '<div style="width: 30%;float: left;text-align: center;line-height:33.6px;">';
-							    // html += '<span>描述相符</span>';
-							    html += '<span>评价</span>';
-							    html += '</div>';
-							    html += '<div style="width: 70%;float: left;text-align: center;">';
-							    html += '<div class="row">';
-							    html += '<div class="col-lg-12">';
-							    html += '<div class="star-rating">';
-							    for(var k = 0; k < review['rating']; k++){
-							    	html += '<span class="mdi mdi-star"></span>';
-							    }
-							    for(var p = 0; p < 5-review['rating']; p++){
-							    	html += '<span class="mdi mdi-star-outline"></span>';
-							    }							    					   
-							    html += '</div>';
-							    html += '</div>';
-							    html += '</div>';
-							    html += '</div>';
-							    // html += '<div style="width: 25%;float: left;text-align: center;line-height:33.6px;">';
-							    // html += '<span>非常好</span>';
-							    // html += '</div>';
-							    html += '<div style="width: 100%;padding:10px 20px;clear:both;text-align:left">';
-							    html += '<span>'+ review['note']+'</span>';
-							    html += '</div>';
-							    html += '</div>';
+                            if (order['status'] == 3) {
+                                html += '<div id="buy_product_again'+i+'" style="width:100%;clear:both;padding: 5px;border-top: 1px solid #ddd;">';
+                                html += '</div>';
+                                if(order['review'] == 1){
+                                	html += '<div style="width:100%;padding: 5px;clear:both;border-top: 1px solid #ddd;">';
+    							    html += '<div style="width: 30%;float: left;text-align: center;line-height:33.6px;">';
+    							    // html += '<span>描述相符</span>';
+    							    html += '<span>评价</span>';
+    							    html += '</div>';
+    							    html += '<div style="width: 70%;float: left;text-align: center;">';
+    							    html += '<div class="row">';
+    							    html += '<div class="col-lg-12">';
+    							    html += '<div class="star-rating">';
+    							    for(var k = 0; k < review['rating']; k++){
+    							    	html += '<span class="mdi mdi-star"></span>';
+    							    }
+    							    for(var p = 0; p < 5-review['rating']; p++){
+    							    	html += '<span class="mdi mdi-star-outline"></span>';
+    							    }							    					   
+    							    html += '</div>';
+    							    html += '</div>';
+    							    html += '</div>';
+    							    html += '</div>';
+    							    // html += '<div style="width: 25%;float: left;text-align: center;line-height:33.6px;">';
+    							    // html += '<span>非常好</span>';
+    							    // html += '</div>';
+    							    html += '<div style="width: 100%;padding:10px 20px;clear:both;text-align:left">';
+    							    html += '<span>'+ review['note']+'</span>';
+    							    html += '</div>';
+    							    html += '</div>';
+                                }
                             }
                             
                             html += '</div>';
@@ -432,14 +449,17 @@
         );
     }
     var order_id = 0;
+    var global_price = 0;
     var payment_type = 1;
-
+    var new_pay = 0;
+    var selected_product;
     function show_pay_modal(orderid, price) {
+        new_pay = 0;
         $('#modal_background').css('display', 'block');
         $('#pay_modal').animate({bottom: 0},'normal');
         $('.total_price').text(price);
         order_id = orderid;
-
+        global_price = price;
     }
     function hide_pay_modal() {
         $('#modal_background').css('display', 'none');
@@ -455,20 +475,35 @@
         $('#md_alipay').attr('src', 'public/img/check.png');
         payment_type = 2;
     }
+    
     function pay_now() {
-        $.post("<?php echo base_url('member/pay_order') ?>", {order_id:order_id},
-            function (data) {
-                var result = JSON.parse(data);
-                if (result.state == "success") {
-                    my_orders(2, 1);
-                    hide_pay_modal();
-                    payment_type = 1;
+        if(new_pay == 0){
+            $.post("<?php echo base_url('member/pay_order') ?>", {order_id:order_id},
+                function (data) {
+                    var result = JSON.parse(data);
+                    if (result.state == "success") {
+                        if (weixin_or_alipay == 0) {
+                            // Weixin
+                        } else {
+                            // Alipay
+                            $('input[name="title"]').val("");
+                            $('input[name="amount"]').val(global_price);
+                            $('input[name="orderid"]').val(result.order_id);
+                            $('#agent_alipay').submit();
+                        }
+                        my_orders(2, 1);
+                        hide_pay_modal();
+                        
+                    }
+                    else{
+                        swal("提示", result.reason, "warning");
+                    }
                 }
-                else{
-                    swal("提示", result.reason, "warning");
-                }
-            }
-        );
+            );
+        }
+        else{
+            pay_again(selected_product);
+        }
     }
     function remind_shipment(order_id) {
         $.post("<?php echo base_url('member/remind_shipment') ?>", {order_id:order_id},
@@ -499,8 +534,158 @@
     function give_evaluation(order_id){
         location.href = '<?php echo base_url ('member/go_evaluation?order_id='); ?>' + order_id;
     }
-    function buy_again(order_id){
+    function buy_again(cnt){
+        var order = global_orders[cnt];
+        var product = global_products[cnt];
+        var pt_ids_amounts = global_pt_ids_amounts;
+        var html = '';
+        var pt_cnt = 0;
+        var total_price = 0;
+        for(var j=0; j < pt_ids_amounts[cnt].length; j++) {
 
+            html += '<div class="item_body">';
+            html += '<div class="product_img">';
+            html += '<img src="../' + product[j]['image'] + '" style="width: 100%;height: 100%;">';
+            html += '</div>';
+            html += '<div class="product_detail">';
+            html += '<p class="text13_regular black444" style="text-align:left;">' + product[j]['name'] + '<span class="text12_medium" style="float: right;">¥' + product[j]['price'] + '</span></p>';
+            html += '<p style="width: 100%;text-align: left;">';
+            html += '<span class="text14_regular black444" style="margin: 10% 0;text-align: left;">购买数量</span>';
+            html += '<span style="float: right">';
+            html += '<img onclick="minus_cnt('+cnt+', '+j+')" src="public/img/minus.png" style="width: 25px;">&nbsp;&nbsp;';
+            html += '<span id="product_cnt'+cnt+'_'+j+'" class="black_text14">1</span>&nbsp;&nbsp;';
+            html += '<img onclick="plus_cnt('+product[j]['stock'] +','+cnt+', '+j+')" src="public/img/plus.png" style="width: 25px;">';
+            html += '</span>';
+            html += '</p>';
+            html += '<p class="text13_regular black444" style="text-align:left;">运费：<span class="text12_medium" style="float: right;">¥<span id="delivery'+cnt+'_'+j+'">' + product[j]['delivery'] + '</span></span></p>';                       
+            html += '</div>';
+            html += '</div>';
+            html += '<div id="description'+cnt+'_'+j+'" class="row m-0" style="padding: 5px 10px;display: none;">';
+            html += '<span class="text13_regular black444">'+ product[j]['description'] +'</span>';
+            html += '</div>';
+            pt_cnt++;
+            total_price += parseFloat(product[j]['price']) + parseFloat(product[j]['delivery']); 
+
+        }
+        html += '<div class="item_footer">';
+        // html += '<p class="text13_regular black444">运费：<span id="delivery'+cnt+'" class="text12_medium" style="float: right;">¥' + 5 + '</span></p>';// 运费：￥5
+        // total_price += 5;
+        html += '<p class="text13_regular black999">共<span id="total_amount'+cnt+'">'+ pt_cnt +'</span>件，应付总额：<span id="again_total_price'+cnt+'" class="text13_medium redFA5359" style="float: right;">¥'+ total_price +'</span></p>';
+        html += '</div>';
+        html += '<div class="row m-0 p-0" style="float: right;padding-bottom: 10px !important;">';                            
+        html += '<img onclick="cancel_buy_again('+cnt+')" class="action_btn" src="public/img/cancel_order.png">';
+        html += '<img onclick="show_pay_again_modal('+ cnt+')" class="action_btn" src="public/img/pay_now.png">';
+        html += '</div>';                    
+        $('#buy_product_again'+cnt).html(html);
+    }
+    function plus_cnt(stock,cth,jth) {
+        var order = global_orders[cth];
+        var product = global_products[cth];
+        var pt_ids_amounts = global_pt_ids_amounts;
+       
+        var cnt = $('#product_cnt'+cth+'_'+jth).text();
+        var int_cnt = parseInt(cnt);
+        var str_stock = stock;
+        var stock = parseInt(str_stock);
+        var delivery = parseFloat(product[jth]['delivery']);
+        var new_delivery = 0;
+        var total_amount = parseInt($('#total_amount'+cth).text());
+        if (int_cnt < stock){
+            int_cnt += 1;
+            total_amount += 1;
+            new_delivery = delivery * int_cnt;
+            $('#product_cnt'+cth+'_'+jth).text(int_cnt); 
+            $('#delivery'+cth+'_'+jth).text(new_delivery);
+            $('#total_amount'+cth).text(total_amount);
+        }
+        var total_price = 0;
+        for(var j=0; j < pt_ids_amounts[cth].length; j++) {
+            total_price += parseInt($('#product_cnt'+cth+'_'+j).text()) * parseFloat(product[j]['price']) +  parseFloat($('#delivery'+cth+'_'+j).text());
+        }
+        $('#again_total_price'+cth).text(total_price);
+    }
+    function minus_cnt(cth,jth) {
+        var product = global_products[cth];
+        var pt_ids_amounts = global_pt_ids_amounts;
+        var cnt = $('#product_cnt'+cth+'_'+jth).text();
+        var int_cnt = parseInt(cnt);
+        var delivery = parseFloat(product[jth]['delivery']);
+        var total_amount = parseInt($('#total_amount'+cth).text());
+        if(int_cnt != 1 ){
+            int_cnt -= 1;
+            total_amount -= 1;
+            new_delivery = delivery * int_cnt;
+            $('#product_cnt'+cth+'_'+jth).text(int_cnt);
+            $('#delivery'+cth+'_'+jth).text(new_delivery);
+            $('#total_amount'+cth).text(total_amount);
+        }
+        var total_price = 0;
+        for(var j=0; j < pt_ids_amounts[cth].length; j++) {
+            total_price += parseInt($('#product_cnt'+cth+'_'+j).text()) * parseFloat(product[j]['price']) +  parseFloat($('#delivery'+cth+'_'+j).text());
+        }
+        $('#again_total_price'+cth).text(total_price);
+    }
+    function cancel_buy_again(cth){
+        var html = '';
+        $('#buy_product_again'+cth).html(html);
+    }
+    function show_pay_again_modal(cnt) {
+        new_pay = 1;
+        var price = $('#again_total_price'+cnt).text();
+        $('#modal_background').css('display', 'block');
+        $('#pay_modal').animate({bottom: 0},'normal');
+        $('.total_price').text(price);   
+        selected_product = cnt;    
+    }
+
+    function pay_again(cth){
+        var order = global_orders[cth];
+        var product = global_products[cth];
+        var pt_ids_amounts = global_pt_ids_amounts;
+        var product_again = [];
+        var delivery = 0;
+        for (var i = 0; i < pt_ids_amounts[cth].length; i++) {
+            var product_id = product[i]['id'];
+            var amount = parseInt($('#product_cnt'+cth+'_'+i).text());
+            product_again[i] = {
+                id: product_id,
+                amount: amount
+            }
+            delivery += parseFloat($('#delivery'+cth+'_'+i).text());
+        }
+        var product_str = JSON.stringify(product_again);
+        var total_price = parseFloat($('#again_total_price'+cth).text());
+        var destination = order['destination']; 
+
+        $.post("<?php echo base_url('member/buy_again') ?>", 
+             {
+                product: product_str,
+                total: total_price,
+                delivery: delivery,
+                coupon: 0
+            },
+            function (data) {
+                var result = JSON.parse(data);
+                if (result.state == "success") {     
+                    if (weixin_or_alipay == 0) {
+                        // Weixin
+                    } else {
+                        // Alipay
+                        $('input[name="title"]').val("");
+                        $('input[name="amount"]').val(total_price);
+                        $('input[name="orderid"]').val(result.orderid);
+                        $('#agent_alipay').submit();
+                    }
+                    my_orders(2, 1);
+                    hide_pay_modal();               
+                    
+                    payment_type = 1;
+                }
+                else{
+                    swal("提示", '', "warning");
+                }
+            }
+        );
     }
     function delete_order(order_id) {
         $.post("<?php echo base_url('member/delete_order') ?>", {order_id:order_id},

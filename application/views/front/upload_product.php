@@ -61,7 +61,7 @@
                         <input type="text" class="text14_regular text_placeholder" id="scale" name="scale" placeholder="请输入规模" style="width: 50%;border: none;height: 50px;padding: 5px 10px;outline: 0;">
                         <select name="unit" id="unit" class="form-control" style="width: 25%;height: 40px;vertical-align: middle;margin-left: auto;margin-right: auto;margin-top: 5px;">
                             <?php if (isset($units)){ foreach ($units as $key => $unit){?>
-                                <option value="<?php echo $unit['id']?>"><?php echo $unit['name']?></option>
+                                <option value="<?php echo $unit['id']-1;?>"><?php echo $unit['name']?></option>
                             <?php }}?>
                         </select>
                     </div>
@@ -76,8 +76,15 @@
                 <div style="width: 100%;padding: 0 4%;border-top: 1px solid #F7F7F7;border-bottom: 2px solid #F7F7F7;">
                     <div class="row m-0 p-0 text15_regular" style="height: 50px;line-height: 50px;">
                         <span class="black444" style="width: 25%">库存：</span>
-                        <input type="text" class="text14_regular text_placeholder" id="stock" name="stock" placeholder="请输入库存" style="width: 50%;border: none;height: 50px;padding: 5px 10px;outline: 0;">
+                        <input type="number" class="text14_regular text_placeholder" id="stock" name="stock" placeholder="请输入库存" style="width: 50%;border: none;height: 50px;padding: 5px 10px;outline: 0;">
                         <span class="blackAAA">件</span>
+                    </div>
+                </div>
+                <div style="width: 100%;padding: 0 4%;border-top: 1px solid #F7F7F7;border-bottom: 2px solid #F7F7F7;">
+                    <div class="row m-0 p-0 text15_regular" style="height: 50px;line-height: 50px;">
+                        <span class="black444" style="width: 25%">运费：</span>
+                        <input type="number" class="text14_regular text_placeholder" id="delivery" name="stock" placeholder="请输入运费" style="width: 50%;border: none;height: 50px;padding: 5px 10px;outline: 0;">
+                        <span class="blackAAA">¥</span>
                     </div>
                 </div>
                 <div style="width: 100%;padding: 0 4%;border-top: 1px solid #F7F7F7;border-bottom: 2px solid #F7F7F7;">
@@ -199,6 +206,7 @@
         var unit = $('#unit').val();
         var stock = $('#stock').val();
         var price = $('#price').val();
+        var delivery = $('#delivery').val();
         var detail = $('#detail').val();
         if (dataURL == ''){
             swal({title: "警告",text: "请选择产品图片。", icon: "warning", cancelButtonText: "确认"});
@@ -220,6 +228,10 @@
             swal({title: "警告",text: "请输入库存。", icon: "warning",confirmButtonText: "确认"});
             return;
         }
+        if (delivery.length < 1){
+            swal({title: "警告",text: "请输入运费。", icon: "warning",confirmButtonText: "确认"});
+            return;
+        }
         if (detail.length < 1){
             swal({title: "警告",text: "请输入产品详情。", icon: "warning",confirmButtonText: "确认"});
             return;
@@ -234,6 +246,7 @@
         formData.append("scale", scale);
         formData.append("unit", unit);
         formData.append("stock", stock);
+        formData.append("delivery", delivery);
         formData.append("detail", detail);
         $.ajax({
             type: "POST",

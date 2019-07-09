@@ -109,7 +109,7 @@ class Admin extends Base {
 	 * 土地管理
 	 * @param string $com
 	 */
-	public function land($com = 'area') {
+	public function land($com = 'area', $sub = null) {
 		if ($this->admin) {
 			$this->load->model('Province_model');
 			$data['provinces'] = $this->Province_model->get_all_provinces(false);
@@ -128,6 +128,11 @@ class Admin extends Base {
 				$this->load->model('Channel_model');
 				$data['channels'] = $this->Channel_model->get_all_channels();
 				$this->load_header('所有土地', true);
+			}
+			if ($com === 'edit') {
+				$this->load->model('Land_model');
+				$data['land'] = $this->Land_model->get_land($sub);
+				$this->load_header('修改土地', true);
 			}
 			$this->load->view('admin/topbar');
 			$this->load->view('admin/sidebar', array('com' => 'land', 'sub' => $com));
@@ -192,14 +197,16 @@ class Admin extends Base {
 	 */
 	public function product($com = 'unit') {
 		if ($this->admin) {
-			if ($com == 'unit')
+			if ($com === 'unit')
 				$this->load_header('优品单位', true);
-			if ($com == 'type')
+			if ($com === 'type')
 				$this->load_header('优品类型', true);
-			if ($com == 'all')
+			if ($com === 'all')
 				$this->load_header('所有优品', true);
-			if ($com == 'request')
+			if ($com === 'request')
 				$this->load_header('入住请求', true);
+			if ($com === 'new')
+				$this->load_header('新增优品', true);
 			$this->load->view('admin/topbar');
 			$this->load->view('admin/sidebar', array('com' => 'product', 'sub' => $com));
 			$this->load->view('admin/product_' . $com);

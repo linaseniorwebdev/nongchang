@@ -219,8 +219,8 @@ class Front extends Base {
 			$order['total'] = $land_price;
 			$order['created_at'] = date('Y-m-d H:i:s');
 			$order_land = $this->Order_model->add_order($order);
-			$cond['owner'] = $user;
-			$this->Land_model->update_land($land_id, $cond);
+			// $cond['owner'] = $user;
+			// $this->Land_model->update_land($land_id, $cond);
 			echo json_encode(array('status' => 'success', 'orderid' => $order_land));
 		}
 		else {
@@ -621,6 +621,7 @@ class Front extends Base {
 					'unit' => $this->input->post('unit'),
 					'price' => $this->input->post('price'),
 					'stock' => $this->input->post('stock'),
+					'delivery' => $this->input->post('delivery'),
 					'description' => $this->input->post('detail'),
 					'updated_at' => date('Y-m-d H:i:s')
 				);

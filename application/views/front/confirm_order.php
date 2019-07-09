@@ -257,7 +257,7 @@
                             // Weixin
                         } else {
                             // Alipay
-                            $('input[name="title"]').val("支付确认：订单号-" + data.orderno + "，优品名-<?php echo $product_names; ?>");
+                            $('input[name="title"]').val("<?php echo $product_names; ?>");
                             $('input[name="amount"]').val(price);
                             $('input[name="orderid"]').val(result.orderid);
                             $('#agent_alipay').submit();

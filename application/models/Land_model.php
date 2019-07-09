@@ -21,21 +21,21 @@ class Land_model extends CI_Model {
 		if ($postData['length'] != -1) {
 			$this->db->limit($postData['length'], $postData['start']);
 		}
-		$this->db->where('status', 1);
+		$this->db->where('status <', 2);
 		$query = $this->db->get();
 		return $query->result();
 	}
 
 	public function countAll() {
 		$this->db->from($this->table);
-		$this->db->where('status', 1);
+		$this->db->where('status <', 2);
 		$query = $this->db->get();
 		return $query->num_rows();
 	}
 
 	public function countFiltered($postData) {
 		$this->_get_datatables_query($postData);
-		$this->db->where('status', 1);
+		$this->db->where('status <', 2);
 		$query = $this->db->get();
 		return $query->num_rows();
 	}
@@ -90,7 +90,7 @@ class Land_model extends CI_Model {
 	 * @return array
 	 */
     public function get_block_lands($block_id, $land_type) {
-        return $this->db->get_where('lands', array('block' => $block_id, 'type' => $land_type))->result_array();
+        return $this->db->get_where('lands', array('block' => $block_id, 'type' => $land_type, 'status' => 1))->result_array();
     }
 
 	/**

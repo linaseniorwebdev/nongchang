@@ -22,6 +22,13 @@
 <!-- BEGIN::Content -->
 <div class="app-content content">
 	<div class="content-wrapper">
+		<div class="content-header row">
+			<div class="content-header-right col-12">
+				<div class="btn-group float-right">
+					<a href="<?php echo base_url('admin/product/new') ?>" class="btn btn-info btn-glow round"><i class="la la-plus" style="font-size: 1rem;"></i><span> 添加优品</span></a>
+				</div>
+			</div>
+		</div>
 		<div class="content-body pt-2">
 			<div class="card">
 				<div class="card-content">
