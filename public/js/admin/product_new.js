@@ -129,7 +129,7 @@ $('.file-chooser-1 > .file-container').on('change', function() {
 	var url = URL.createObjectURL(file);
 	$(".img-container img").fadeIn().prop('src', url).cropper({
 		viewMode: 1,
-		aspectRatio: 4 / 3
+		aspectRatio: 6 / 5
 	});
 	$(".file-chooser-1").fadeOut("fast", function() {
 		$(".file-confirm-1").fadeIn("fast");

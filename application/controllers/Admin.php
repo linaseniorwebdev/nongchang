@@ -104,10 +104,11 @@ class Admin extends Base {
 		} else
 			redirect('admin/signin');
 	}
-	
+
 	/**
 	 * 土地管理
 	 * @param string $com
+	 * @param null $sub
 	 */
 	public function land($com = 'area', $sub = null) {
 		if ($this->admin) {

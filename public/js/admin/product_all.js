@@ -42,6 +42,9 @@ $(document).ready(function() {
 			{
 				targets: [5],
 				render: function ( data, type, row ) {
+					if (row[8] == null) {
+						return '<span style="margin-left: 5px;">' + data + '</span>';
+					}
 					return '<img src="../../' + row[8] + '" style="width: 40px; height: 40px; border-radius: 50%;"><span style="margin-left: 5px;">' + data + '</span>';
 				},
 				orderable: false

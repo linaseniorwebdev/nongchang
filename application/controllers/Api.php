@@ -775,7 +775,11 @@ class Api extends Base {
 			$products = $this->Product_model->getRows($_POST);
 
 			foreach($products as $product) {
-				$data[] = array($product->id, $product->image, $types[$product->type], $product->name, date( 'Y年m月d日', strtotime($product->updated_at)), $users[$malls[$product->mall]]['name'], $product->status, null, $users[$malls[$product->mall]]['photo']);
+				if ($product->mall === '0') {
+					$data[] = array($product->id, $product->image, $types[$product->type], $product->name, date( 'Y年m月d日', strtotime($product->updated_at)), '管理员', $product->status, null, null);
+				} else {
+					$data[] = array($product->id, $product->image, $types[$product->type], $product->name, date( 'Y年m月d日', strtotime($product->updated_at)), $users[$malls[$product->mall]]['name'], $product->status, null, $users[$malls[$product->mall]]['photo']);
+				}
 			}
 
 			$output = array(
@@ -1275,7 +1279,7 @@ class Api extends Base {
 					'stock' => $this->input->post('stock'),
 					'updated_at' => date('Y-m-d H:i:s')
 				);
-				$pictures = explode("%", $this->input->post('image'));
+				$pictures = explode("%", $this->input->post('images'));
 				$picture = str_replace(array('data:image/png;base64,', ' '), array('', '+'), $pictures[0]);
 				$data = base64_decode($picture);
 				$file = 'uploads/products/0_' . md5($picture) . '.png';
