@@ -482,7 +482,7 @@
                 function (data) {
                     var result = JSON.parse(data);
                     if (result.state == "success") {
-                        if (weixin_or_alipay == 0) {
+                        if (payment_type == 1) {
                             // Weixin
                         } else {
                             // Alipay
@@ -667,7 +667,7 @@
             function (data) {
                 var result = JSON.parse(data);
                 if (result.state == "success") {     
-                    if (weixin_or_alipay == 0) {
+                    if (payment_type == 1) {
                         // Weixin
                     } else {
                         // Alipay

@@ -101,6 +101,7 @@
                 function (data) {
                     var result = JSON.parse(data);
                     if (result.status == "success") {
+                        console.log(result);
                         location.href = "<?php echo base_url('member/change_password/'); ?>" + result.id;
                     } else {
                         swal("警告", "此用户不存在。", "warning");

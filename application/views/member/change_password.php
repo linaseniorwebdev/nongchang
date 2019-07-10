@@ -12,7 +12,8 @@
             </div>
         </div>
         <div class="content-body" style="margin-top: 45px;position: absolute;width: 100%;bottom: 0;top: 0;">
-            <form id="change_form" action="<?php echo base_url('member/change_password')?>" method="post">
+            
+            <form id="change_form" action="<?php echo base_url('member/change_password/' . $user['id'])?>" method="post">
                 <input type="hidden" id="user_id" name="user_id" value="<?php echo $user['id']; ?>">
                 <div style="width: 100%;padding: 0 4%;border-top: 3px solid #F7F7F7;border-bottom: 2px solid #F7F7F7;background: white;">
                     <div class="row m-0 p-0 text15_regular" style="height: 50px;line-height: 50px;">

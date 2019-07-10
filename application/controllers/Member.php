@@ -136,13 +136,16 @@ class Member extends Base {
         $this->load->model('User_model');
         $data = $this->User_model->get_by_name($username);
         if ($data) {
-
-        } else
+        	$data['status'] = 'success';
+        } else {
             $data = $this->User_model->get_by_phone($username);
-        if ($data) {
-            $data['status'] = 'success';
+            if ($data) {
+            	$data['status'] = 'success';
+	        } else {
+	        	$data = array('status' => 'fail');
+	        }
         }
-        else $data['status'] = 'fail';
+        
         echo json_encode($data);
     }
 
@@ -688,6 +691,33 @@ class Member extends Base {
                 $order_id = $this->input->post('order_id');
                 $params['status'] = 3;
                 $this->Order_model->update_order($order_id, $params);
+                $order = $this->Order_model->get_order($order_id);
+                $this->load->model('Product_model');
+	    		$products = $this->decodeArray($order['product']);
+	    		$this->load->model('Malls_model');
+	    		$this->load->model('Income_model');
+	    		$total_price = 0;
+	    		foreach ($products as $product) {
+	    			$product_id = $product['id'];
+	    			$amount = $product['amount'];
+	    			$product_detail = $this->Product_model->get_product($product_id);
+	    			$product_price = $product_detail['price'];
+	    			$total_price += $amount * $product_price;
+	    			$mall = $this->Malls_model->get_mall($product_detail['mall']);
+	    			$seller_id = $mall['owner'];
+	    			$seller_fee = (float) $this->getVar('seller_fee');
+	    			$real_price = floor((1 - $seller_fee) * 100 * $total_price) / 100.0;
+	    			$site = $total_price - $real_price;
+	    			$db_income = array(
+	    				'order' => $order_id,
+	    				'seller' => $seller_id,
+	    				'total' => $total_price,
+	    				'real' => $real_price,
+	    				'site' => $site,
+	    				'created_at' => date('Y-m-d H:i:s')
+	    			);
+	    			$this->Income_model->add_income($db_income);
+	    		}
                 $data['state'] = 'success';
             }catch (Exception $ex){
                 $data['reason'] =  $ex->getMessage();
