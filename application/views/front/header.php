@@ -29,6 +29,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		body {
 			background-color: white !important;
 		}
+		
+  		.common-menu{
+      		display: none !important;
+    	}
+
 	</style>
 </head>
 

@@ -67,7 +67,7 @@
             <!-- </div> -->
 
             
-              <iframe class="hide_scrollbar" scrolling="no" src="https://m.kuaidi100.com/app/query/?com=datianwuliu&nu=6176832803&coname=meizu&callbackurl=http://192.168.8.113/nongchang/member/my_order"></iframe>
+              <iframe class="hide_scrollbar" scrolling="no" src="https://m.kuaidi100.com/app/query/?com=datianwuliu&nu=6176832803&callbackurl=http://www.smdlmcy.com/member/my_order"></iframe>
             
         <!-- </div> -->
     <!-- </div> -->
@@ -262,10 +262,14 @@
     }
 
     .star-rating .mdi-star{color: yellow;}
+
+    
 </style>
 <script>
     $(document).ready(function() {
         var order_id = $('#order_id').val();
+        $('.common-title').html('ookk');
+        $('.common-menu').css('display', 'none !important');
         // my_order(order_id);    
         let elem = document.querySelector("iframe");
         // elem.requestFullscreen();  

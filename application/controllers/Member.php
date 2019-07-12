@@ -861,7 +861,9 @@ class Member extends Base {
 	} 
 
 	public function go_logistics($order_id = null){
-		if ($this->login) {			
+		if ($this->login) {		
+			$user = $this->user->getId();
+			$data['user_id'] = $user;	
             $data['order_id'] = $order_id; 
             $this->load_header('查看物流');
             $this->load->view('member/view_logistics', $data);
@@ -896,4 +898,64 @@ class Member extends Base {
         } else
             redirect('member/login');
 	}  
+
+	public function my_order_return($user_id) {
+        if ($this->login) {
+            $user = $user_id;
+            $this->load->model('Order_model');
+            if ($this->post_exist()) {
+                $data['state'] = 'fail';
+                try{
+                    $data = array();
+                    $status = $this->input->post('status');
+                    if ($status == 'all') {
+                        $data['orders'] = $this->Order_model->get_user_orders($user);
+                    }
+                    else if ($status == 0){
+                        $data['orders'] = $this->Order_model->get_user_order0($user, 0);
+                    }
+                    else{
+                        $data['orders'] = $this->Order_model->get_user_orders($user, $status);
+                    }
+//                    file_put_contents('debug.txt', date("Y-m-d H:i:s") . ' `orderlength` = ' . count($data['orders']));
+                    $this->load->model('Product_model');
+                    $this->load->model('Review_model');
+                    $prods = array();
+                    $pt_ids_amounts = array();
+                    $reviews = array();
+                    foreach ($data['orders'] as $key => $order){
+                        $products = $this->decodeArray($order['product']);
+                        array_push($pt_ids_amounts, $products);
+                        $pts = array();
+                        foreach ($products as $product) {
+                            $pt = $this->Product_model->get_product($product['id']);
+                            array_push($pts, $pt);
+                        }
+                        array_push($prods, $pts);
+
+                        // if ($order['status'] == 3 && $order['review'] == 1) {
+                        	$review = $this->Review_model->get_order_review($order['id']);
+                        	array_push($reviews, $review);
+                        // }
+                        
+                    }
+                    $data['pt_ids_amounts'] = $pt_ids_amounts;
+                    $data['products'] = $prods;
+                    $data['reviews'] = $reviews;
+                    $data['state'] = 'success';
+
+                } catch (Exception $ex){
+                    $data['reason'] =  $ex->getMessage();
+                }
+                echo json_encode($data);
+            }
+            else{
+                $this->load_header('我的订单');
+                $this->load->view('member/my_order');
+                $this->load_footer();
+            }
+
+        } else
+            redirect('member/login');
+    }
 }
