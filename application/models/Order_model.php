@@ -126,7 +126,7 @@ class Order_model extends CI_Model {
 	    if ($status) {
 		    $this->db->where('status', $status);
 	    }
-	    $this->db->order_by('id', 'asc');
+	    $this->db->order_by('id', 'desc');
         return $this->db->get()->result_array();
     }
 
@@ -135,7 +135,7 @@ class Order_model extends CI_Model {
         $this->db->where('user', $user);
         $this->db->where('type', 0);
         $this->db->where('status', $status);
-        $this->db->order_by('id', 'asc');
+        $this->db->order_by('id', 'desc');
         return $this->db->get()->result_array();
     }
 

@@ -338,7 +338,18 @@
                                 html += '<div class="product_detail">';
                                 html += '<p class="text13_regular black444">' + product[j]['name'] + '<span class="text12_medium" style="float: right;">¥' + product[j]['price'] + '</span></p>';
                                 html += '<p class="text13_regular black444">订单编号：<span class="text12_regular black999" style="float: right;">' + order['orderno'] + '</span></p>';
-                                html += '<p onclick="show_description('+i+','+j+')" class="text12_regular redFA5359" style="float: right;position: absolute; right: 10px;margin-top: 33px;">查看产品使用说明</p>';
+                                if(order['status'] > 0){
+                                    if(order['delivery_no'] != null){
+                                        html += '<p class="text13_regular black444">物流单号：<span class="text12_regular black999" style="float: right;">' + order['delivery_no'] + '</span></p>';
+                                    }
+                                    else{
+                                        html += '<p class="text13_regular black444">物流单号：<span class="text12_regular black999" style="float: right;"></span></p>';
+                                    }
+                                    html += '<p onclick="show_description('+i+','+j+')" class="text12_regular redFA5359" style="float: right;position: absolute; right: 10px;margin-top: 7px;">查看产品使用说明</p>';
+                                }
+                                else {
+                                    html += '<p onclick="show_description('+i+','+j+')" class="text12_regular redFA5359" style="float: right;position: absolute; right: 10px;margin-top: 33px;">查看产品使用说明</p>';
+                                }
                                 html += '</div>';
                                 html += '</div>';
                                 html += '<div id="description'+i+'_'+j+'" class="row m-0" style="padding: 5px 10px;display: none;">';
@@ -356,7 +367,7 @@
                                 html += '<img onclick="show_pay_modal('+ order['id'] +', '+total_price+')" class="action_btn" src="public/img/pay_now.png">';
                             }
                             else if (order['status'] == 1) {
-                                html += '<img class="action_btn" src="public/img/view_logistics.png">';
+                                html += '<img onclick="go_logistics('+ order['id'] +')" class="action_btn" src="public/img/view_logistics.png">';
                                 html += '<img onclick="cancel_order('+ order['id'] +', 1)" class="action_btn" src="public/img/cancel_order.png">';
                                 html += '<img onclick="remind_shipment('+ order['id'] +')" class="action_btn" src="public/img/remind_shipment.png">';
                             }
@@ -366,7 +377,7 @@
                                 html += '<img onclick="complete_order('+ order['id'] +')" class="action_btn" src="public/img/confirm_delivery.png">';
                             }
                             else if (order['status'] == 3) {
-                                html += '<img class="action_btn" src="public/img/view_logistics.png">';
+                                html += '<img onclick="go_logistics('+ order['id'] +')" class="action_btn" src="public/img/view_logistics.png">';
                                 html += '<img onclick="buy_again('+i+')" class="action_btn" src="public/img/buy_btn_again.png">';
                                 if (order['review'] == 0) 
                                     html += '<img onclick="give_evaluation('+ order['id'] +')" class="action_btn" src="public/img/feedback.png">';
@@ -700,11 +711,6 @@
             }
         );
     }
-    // function evaluation(id) {
-    //     selected_bottom_line(id);
-    //     var html = '';
-    //     html += '';
-    // }
     function selected_bottom_line(id) {
         $('#all_bottom').css('display', 'none');
         $('#pending_bottom').css('display', 'none');
@@ -716,6 +722,9 @@
         else if (id == 2) $('#delivered_bottom').css('display', 'block');
         else if (id == 3) $('#receipt_bottom').css('display', 'block');
         else $('#evaluation_bottom').css('display', 'block');
+    }
+    function go_logistics(order_id){
+        location.href = '<?php echo base_url ('member/go_logistics/'); ?>' + order_id;
     }
     function go_profile() {
         location.href = '<?php echo base_url ('member'); ?>';

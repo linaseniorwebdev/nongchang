@@ -858,5 +858,42 @@ class Member extends Base {
 		} else {
 			redirect('member/login');
 		}
-	}    
+	} 
+
+	public function go_logistics($order_id = null){
+		if ($this->login) {			
+            $data['order_id'] = $order_id; 
+            $this->load_header('查看物流');
+            $this->load->view('member/view_logistics', $data);
+            $this->load_footer();          
+        } else
+            redirect('member/login');
+	} 
+	public function load_logistics(){
+		if ($this->login) {
+			$data['state'] = 'fail';
+			try{
+				$this->load->model('Order_model');
+				$this->load->model('Product_model');
+				$order_id = $this->input->post('order_id');
+	            $order = $this->Order_model->get_order($order_id);
+	            
+	            $products = $this->decodeArray($order['product']);
+	            $data['pt_ids_amounts'] = $products;
+	            $pts = array();
+	            foreach ($products as $product) {
+	                $pt = $this->Product_model->get_product($product['id']);
+	                array_push($pts, $pt);
+	            }            
+	            $data['order'] = $order;
+	            $data['products'] = $pts;
+	            $data['state'] = 'success'; 
+			}catch (Exception $ex){
+                $data['reason'] =  $ex->getMessage();
+            }
+			
+            echo json_encode($data);        
+        } else
+            redirect('member/login');
+	}  
 }

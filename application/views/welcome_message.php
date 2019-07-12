@@ -1,44 +1,106 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?>
-<!DOCTYPE html>
-<html>
+/**
+ * Template Name: Index Template
+ */
+get_header(); ?>
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <title>Test Page</title>
-</head>
+	<div class="main-body">
+		<div class="main-body-in">
 
-<body>
-	<span>Width:</span>
-	<input type="text" id="wd" />px<br/>
-	<span>Height:</span>
-	<input type="text" id="ht" />px
-	<button type="button" onclick="show()">Click</button>
-</body>
-<script>
-	window.onresize = function(event) {
-		let wd = document.getElementById('wd');
-		let ht = document.getElementById('ht');
-		wd.value = window.innerWidth;// || document.documentElement.clientWidth || document.body.clientWidth;
-		ht.value = window.innerHeight;// || document.documentElement.clientHeight || document.body.clientHeight;
-	};
+			<?php the_breadcrumbs(); ?>
 
-	window.onload = function(event) {
-		let wd = document.getElementById('wd');
-		let ht = document.getElementById('ht');
-		wd.value = window.innerWidth;// || document.documentElement.clientWidth || document.body.clientWidth;
-		ht.value = window.innerHeight;// || document.documentElement.clientHeight || document.body.clientHeight;
-	};
+			<main>
+				<div class="main-conts">
+					<?php while (have_posts()) : the_post(); ?>
 
-	function show() {
-		let wd = document.getElementById('wd');
-		let ht = document.getElementById('ht');
-		wd.value = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-		ht.value = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-		alert('ok');
-	}
-</script>
-</html>
+						<article id="post-<?php the_ID(); ?>" <?php post_class('section-wrap'); ?>>
+							<div class="section-in">
+
+								<header class="article-header">
+									<h1 class="section-title" itemprop="headline"><?php h1_keni(); ?></h1>
+									<?php if (get_the_time('Y-m-d') != get_the_modified_date('Y-m-d')) { ?>
+										<p class="post-date"><?php _e('Published on','keni') ?> : <time datetime="<?php the_time('Y-m-d'); ?>" itemprop="datePublished" content="<?php the_time('Y-m-d'); ?>" ><?php the_time(get_option('date_format')); ?></time> / <?php _e('Last modified on','keni') ?> : <time datetime="<?php the_modified_date('Y-m-d'); ?>" itemprop="dateModified" content="<?php the_modified_date('Y-m-d'); ?>"><?php echo get_the_modified_date(get_option('date_format')); ?></time></p>
+									<?php } else { ?>
+										<p class="post-date"><time datetime="<?php the_time('Y-m-d'); ?>" itemprop="datePublished" content="<?php the_time('Y-m-d'); ?>" ><?php the_time(get_option('date_format')); ?></time></p>
+										<meta itemprop="dateModified" content="<?php the_time('Y-m-d'); ?>">
+									<?php } ?>
+									<?php if (the_keni('pv_view') == "y" && getViewPV(get_the_ID()) > 0) { ?><p class="post-pv"><?php viewPV(); ?>PV</p><?php } ?>
+									<?php {
+										$site_url = site_url();
+										if (!preg_match("/\/$/", $site_url)) $site_url .= "/";
+
+										$category_data = get_category_keni();
+										if (!empty($category_data)) echo "<div class=\"post-cat\">\n".$category_data."\n</div>\n";
+									} ?>
+									<?php if (the_keni('social_post_view') == "y") get_template_part('social-button2'); ?>
+								</header>
+
+								<div class="article-body">
+									<?php
+									if (is_attachment()) {
+										the_content();
+										if ( has_excerpt() ) {
+											echo "<p>".get_the_excerpt()."</p>";
+											echo "<p>".get_post_meta(get_the_ID(), '_wp_attachment_image_alt', true)."</p>";
+										}
+									} else {
+
+										the_content();
+
+										wp_link_pages( array(
+											'before'      => '<div class="link-pages"><span class="link-pages-cap">'. __('Pages','keni').':</span>',
+											'after'       => '</div>',
+											'link_before' => '<span>',
+											'link_after'  => '</span>',
+										) );
+									}
+									?>
+								</div>
+
+								<?php if (the_keni('social_post_view') == "y") get_template_part('social-button2'); ?>
+
+								<?php if(get_the_tags()){ ?>
+									<div class="post-tag">
+										<p><?php _e('Tags', 'keni'); ?> : <?php the_tags('', ', '); ?></p>
+									</div>
+								<?php }
+
+								relation_keni();
+
+								$next_link = get_next_post_link('<p class="page-nav-next">「%link」</p>','%title',true);
+								if ($next_link != "") {
+									preg_match("/(<p class=\"page-nav-next\">「.*?href=\".*?\".*?rel=\"next\">)(.+?)(<\/a>」<\/p>)/us", $next_link, $next_title);
+									if (isset($next_title[3])) $next_link = $next_title[1].esc_html($next_title[2]).$next_title[3];
+								}
+
+								$prev_link = get_previous_post_link('<p class="page-nav-prev">「%link」</p>','%title',true);
+								if ($prev_link != "") {
+									preg_match("/(<p class=\"page-nav-prev\">「.*?href=\".*?\".*?rel=\"prev\">)(.+?)(<\/a>」<\/p>)/us", $prev_link, $prev_title);
+									if (isset($prev_title[3])) $prev_link = $prev_title[1].esc_html($prev_title[2]).$prev_title[3];
+								}
+
+								if ($next_link != "" || $prev_link != "") { ?>
+									<div class="page-nav-bf cont-nav">
+										<?php	echo $next_link."\n";
+										echo $prev_link."\n"; ?>
+									</div>
+								<?php } ?>
+
+								<section id="comments" class="comments-area">
+									<?php comments_template(); ?>
+								</section>
+
+							</div>
+						</article>
+
+					<?php endwhile; ?>
+
+				</div>
+			</main>
+
+			<?php get_sidebar(); ?>
+
+		</div>
+	</div>
+
+<?php get_footer(); ?>
